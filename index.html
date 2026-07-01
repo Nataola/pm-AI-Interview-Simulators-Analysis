@@ -3,1353 +3,184 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PM/PMM Interview Simulators Master Matrix & Sandbox</title>
+    <title>PM/PMM Interview Simulators Master Matrix</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f1f1f1; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-        .card-shadow { box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 8px -1px rgba(0, 0, 0, 0.03); }
-        .spinner {
-            border: 3px solid rgba(79, 70, 229, 0.1);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border-left-color: #4f46e5;
-            animation: spin 1s linear infinite;
-        }
+        .table-container { max-height: 700px; overflow: auto; border: 1px solid #e2e8f0; border-radius: 1rem; }
+        .sticky-header { position: sticky; top: 0; background-color: #0f172a; z-index: 30; }
+        .sticky-corner { position: sticky; top: 0; left: 0; background-color: #0f172a; z-index: 40; }
+        .sticky-col { position: sticky; left: 0; z-index: 20; background-color: white; border-right: 1px solid #e2e8f0; }
+        .spinner { border: 3px solid rgba(79, 70, 229, 0.1); width: 36px; height: 36px; border-radius: 50%; border-left-color: #4f46e5; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        /* Highlighting active column on hover */
-        .col-highlight { background-color: rgba(240, 242, 254, 0.5); }
-        /* Table sticky setups */
-        .table-container {
-            max-height: 650px;
-            overflow: auto;
-        }
-        th.sticky-header {
-            position: sticky;
-            top: 0;
-            background-color: #0f172a;
-            z-index: 20;
-        }
-        th.sticky-corner {
-            position: sticky;
-            top: 0;
-            left: 0;
-            background-color: #0f172a;
-            z-index: 30;
-        }
-        td.sticky-col {
-            position: sticky;
-            left: 0;
-            z-index: 10;
-        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex flex-col antialiased">
-
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16 items-center">
-                <div class="flex items-center gap-2">
-                    <div class="w-9 h-9 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black tracking-wider shadow-md shadow-indigo-200">PM</div>
-                    <span class="text-lg font-bold tracking-tight text-slate-800">Recruiter<span class="text-indigo-600 font-extrabold text-xs ml-0.5 uppercase">.Lab</span></span>
-                </div>
-                <!-- Desktop Navigation Menu -->
-                <div class="hidden lg:flex space-x-1">
-                    <button onclick="scrollToSection('sec-market')" class="nav-link text-xs font-semibold py-5 px-3 text-slate-600 hover:text-indigo-600 transition-colors">Обзор рынка</button>
-                    <button onclick="scrollToSection('sec-matrix')" class="nav-link text-xs font-bold py-5 px-3 text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                        <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
-                        Сводная Мега-Матрица
-                    </button>
-                    <button onclick="scrollToSection('sec-calculator')" class="nav-link text-xs font-bold py-5 px-3 text-emerald-600 hover:text-emerald-800 flex items-center gap-1">
-                        <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                        Интерактивный Калькулятор
-                    </button>
-                    <button onclick="scrollToSection('sec-sandbox')" class="nav-link text-xs font-bold py-5 px-3 text-indigo-600 hover:text-indigo-800 flex items-center gap-1">
-                        <span class="h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
-                        ИИ-Тренажер [Beta]
-                    </button>
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex-grow space-y-16">
-        
-        <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 rounded-2xl p-8 md:p-12 text-white relative overflow-hidden shadow-xl">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(99,102,241,0.15),transparent_45%)]"></div>
-            <div class="relative z-10 max-w-4xl space-y-4">
-                <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full">Аналитический аудит 2026</span>
-                <h1 class="text-3xl md:text-5xl font-black tracking-tight leading-tight">Справочник ИИ-Симуляторов для PM & PMM</h1>
-                <p class="text-base md:text-lg text-slate-300 font-medium leading-relaxed">
-                    Глубокий разбор специализированных инструментов подготовки. Сравнение архитектур, цен, поддерживаемых типов секций и честный анализ отзывов пользователей с Reddit, Habr и VC.ru.
-                </p>
-                <div class="pt-2 flex flex-wrap gap-4">
-                    <div class="bg-white/5 border border-white/10 px-4 py-2.5 rounded-xl text-xs font-medium text-slate-300">
-                        🎯 <strong class="text-white">8</strong> Платформ в деталях
-                    </div>
-                    <div class="bg-white/5 border border-white/10 px-4 py-2.5 rounded-xl text-xs font-medium text-slate-300">
-                        ⚡ <strong class="text-white">50+</strong> Сравниваемых параметров
-                    </div>
-                    <div class="bg-white/5 border border-white/10 px-4 py-2.5 rounded-xl text-xs font-medium text-slate-300">
-                        🤖 Интегрированный <strong class="text-white">Gemini 3 Flash</strong>
-                    </div>
-                </div>
-            </div>
+<body class="bg-slate-50 min-h-screen p-4 md:p-8">
+    <main class="max-w-7xl mx-auto space-y-12">
+        <header class="bg-slate-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl">
+            <h1 class="text-3xl md:text-5xl font-black tracking-tight mb-4">Справочник ИИ-Симуляторов</h1>
+            <p class="text-slate-400 font-medium">Для подготовки к интервью продакт-менеджеров.</p>
         </header>
 
-        <section id="sec-market" class="space-y-6 scroll-mt-20">
-            <div class="flex items-center gap-3">
-                <div class="w-1.5 h-6 bg-indigo-600 rounded-full"></div>
-                <h2 class="text-2xl font-black text-slate-900">Аналитика рынка симуляторов</h2>
-            </div>
-            
-            <div class="bg-amber-50 border-l-4 border-amber-500 p-5 rounded-r-xl">
-                <div class="flex gap-3">
-                    <span class="text-xl">⚠️</span>
-                    <div>
-                        <h4 class="font-bold text-amber-900 text-sm">Вердикт эксперта: Универсального инструмента не существует!</h4>
-                        <p class="text-xs text-amber-800 mt-1 leading-relaxed">
-                            Российские симуляторы (например, <strong>Fluxx.ru</strong>) затачиваются под "продуктовую чуйку" и гибкое бизнес-мышление, ценимые в Яндексе и Ozon. Зарубежные гиганты (например, <strong>Hello Interview</strong>, <strong>PMExercises</strong>) требуют академического следования западным фреймворкам (CIRCLES, STAR, HEART) и глубоких технических знаний (System Design). Выбирайте инструмент, исходя из географии ваших вакансий.
-                        </p>
-                    </div>
+        <!-- Калькулятор -->
+        <section id="wizard" class="bg-white p-8 rounded-3xl border shadow-sm">
+            <h2 class="text-2xl font-black mb-6">Индивидуальный подбор тренажера</h2>
+            <div id="step1" class="space-y-4">
+                <p class="font-bold">1. Таргетная компания (не больше 2):</p>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+                    <button onclick="selectCompany('FAANG')" class="p-3 border rounded-xl hover:bg-indigo-50">FAANG/Big Tech</button>
+                    <button onclick="selectCompany('Startups')" class="p-3 border rounded-xl hover:bg-indigo-50">Стартапы</button>
+                    <button onclick="selectCompany('Russian')" class="p-3 border rounded-xl hover:bg-indigo-50">Российские BigTech</button>
+                    <button onclick="selectCompany('Remote')" class="p-3 border rounded-xl hover:bg-indigo-50">Зарубеж удаленка</button>
                 </div>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
-                    <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        📊 <span>Сравнение фокуса компетенций (РФ vs Global)</span>
-                    </h3>
-                    <div class="relative h-[280px]">
-                        <canvas id="radarChart"></canvas>
-                    </div>
+            <div id="step2" class="hidden space-y-4 mt-6">
+                <p class="font-bold">2. Уровень роли (не больше 2):</p>
+                <div class="grid grid-cols-2 gap-2">
+                    <button onclick="selectRole('Junior')" class="p-3 border rounded-xl hover:bg-indigo-50">Junior / Intern</button>
+                    <button onclick="selectRole('Middle')" class="p-3 border rounded-xl hover:bg-indigo-50">Middle</button>
+                    <button onclick="selectRole('Senior')" class="p-3 border rounded-xl hover:bg-indigo-50">Senior / Lead</button>
+                    <button onclick="selectRole('CPO')" class="p-3 border rounded-xl hover:bg-indigo-50">Executive / CPO</button>
                 </div>
-                <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
-                    <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
-                        💵 <span>Месячный эквивалент подписки (в USD)</span>
-                    </h3>
-                    <div class="relative h-[280px]">
-                        <canvas id="barChart"></canvas>
-                    </div>
-                </div>
+            </div>
+            <div id="step3" class="hidden mt-8">
+                <div id="results" class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100"></div>
+                <button onclick="location.reload()" class="mt-4 px-6 py-2 bg-slate-900 text-white rounded-xl">Сбросить</button>
             </div>
         </section>
 
-        <!-- Dynamic Calculator Section -->
-        <section id="sec-calculator" class="space-y-6 scroll-mt-20 border-t border-slate-200 pt-16">
-            <div class="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 md:p-8">
-                <h2 class="text-2xl md:text-3xl font-black text-emerald-950">Интерактивный Калькулятор подбора трека</h2>
-                <p class="text-sm text-emerald-800 max-w-2xl mt-1 leading-relaxed">
-                    Ответьте на несколько простых вопросов о ваших карьерных целях. Система автоматически сформирует приоритеты подготовки и подберет идеальную комбинацию симуляторов именно под ваши требования.
-                </p>
-            </div>
-
-            <div class="bg-white p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm max-w-3xl mx-auto">
-                <!-- Progress Stepper Indicators -->
-                <div class="flex items-center justify-between mb-8 border-b border-slate-100 pb-4 text-xs font-bold text-slate-400">
-                    <span id="step-ind-1" class="text-emerald-600 flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px]">1</span> Компания</span>
-                    <span class="text-slate-200">➔</span>
-                    <span id="step-ind-2" class="flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px]">2</span> Уровень</span>
-                    <span class="text-slate-200">➔</span>
-                    <span id="step-ind-3" class="flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px]">3</span> Фокус подготовки</span>
-                    <span class="text-slate-200">➔</span>
-                    <span id="step-ind-4" class="flex items-center gap-1.5"><span class="w-5 h-5 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px]">4</span> Подбор</span>
-                </div>
-
-                <!-- Wizard Container -->
-                <div id="wizard-content">
-                    <!-- Step 1: Target Company -->
-                    <div id="wizard-step-1" class="space-y-5">
-                        <div class="space-y-1">
-                            <h3 class="text-base font-black text-slate-900">Шаг 1: Выберите целевые компании</h3>
-                            <p class="text-xs text-slate-400">Выберите не более 2 вариантов одновременно.</p>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="calc-company-options">
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="ru-bigtech" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-company-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">Яндекс / Ozon (РФ)</span>
-                                    <span class="text-slate-400 font-medium">Специфика СНГ-рынка</span>
-                                </div>
-                            </label>
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="faang" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-company-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">Google / Meta / FAANG</span>
-                                    <span class="text-slate-400 font-medium">Жесткие западные фреймворки</span>
-                                </div>
-                            </label>
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="fintech" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-company-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">Stripe / Revolut / Fintech</span>
-                                    <span class="text-slate-400 font-medium">Технические и продуктовые метрики</span>
-                                </div>
-                            </label>
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="startup" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-company-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">Ранние и средние стартапы</span>
-                                    <span class="text-slate-400 font-medium">Широкий профиль, гибкие задачи</span>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="flex justify-end pt-4">
-                            <button onclick="calcNextStep(2)" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all">Далее</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 2: Role Level -->
-                    <div id="wizard-step-2" class="hidden space-y-5">
-                        <div class="space-y-1">
-                            <h3 class="text-base font-black text-slate-900">Шаг 2: Выберите уровень роли</h3>
-                            <p class="text-xs text-slate-400">Выберите не более 2 вариантов одновременно.</p>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3" id="calc-grade-options">
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="junior" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-grade-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">Intern / Junior</span>
-                                    <span class="text-slate-400 font-medium">Вход в профессию, база</span>
-                                </div>
-                            </label>
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="middle" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-grade-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">Middle PM / PMM</span>
-                                    <span class="text-slate-400 font-medium">Самостоятельное ведение фичей</span>
-                                </div>
-                            </label>
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="senior" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-grade-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">Senior / Lead PM</span>
-                                    <span class="text-slate-400 font-medium">Стратегия, кросс-командное влияние</span>
-                                </div>
-                            </label>
-                            <label class="border border-slate-200 p-4 rounded-xl flex items-center gap-3 cursor-pointer hover:bg-slate-50 transition-all">
-                                <input type="checkbox" value="executive" class="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500" onchange="limitCheckboxes('calc-grade-options', 2)">
-                                <div class="text-xs">
-                                    <span class="font-bold block text-slate-800">CPO / Executive PM</span>
-                                    <span class="text-slate-400 font-medium">Управление портфелем, орг. структура</span>
-                                </div>
-                            </label>
-                        </div>
-                        <div class="flex justify-between pt-4">
-                            <button onclick="calcPrevStep(1)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all">Назад</button>
-                            <button onclick="calcNextStep(3)" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all">Далее</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 3: What is Important (Dynamic Insights) -->
-                    <div id="wizard-step-3" class="hidden space-y-5">
-                        <div class="space-y-1">
-                            <h3 class="text-base font-black text-slate-900 font-bold">Шаг 3: Что важно при подготовке</h3>
-                            <p class="text-xs text-slate-400">Автоматически рассчитанные приоритеты на основе ваших параметров.</p>
-                        </div>
-                        
-                        <div class="p-5 bg-slate-50 rounded-xl border border-slate-100 text-xs text-slate-700 space-y-4" id="calc-importance-text">
-                            <!-- Dynamic Importance Points Injected Here -->
-                        </div>
-
-                        <div class="flex justify-between pt-4">
-                            <button onclick="calcPrevStep(2)" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all">Назад</button>
-                            <button onclick="generateCalcRecommendations()" class="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-all">Подобрать трек</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 4: Results Recommendations -->
-                    <div id="wizard-step-4" class="hidden space-y-6">
-                        <div class="border-b pb-3">
-                            <h3 class="text-base font-black text-slate-900 font-bold">Шаг 4: Персональный подбор</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Рекомендуемый набор сервисов на основе ваших ответов:</p>
-                        </div>
-
-                        <!-- Selections Recap Chips -->
-                        <div class="flex flex-wrap gap-2 text-[10px] font-bold text-slate-500">
-                            <span class="bg-slate-100 px-2.5 py-1 rounded-full flex items-center gap-1">💼 Компания: <span id="recap-company" class="text-slate-800"></span></span>
-                            <span class="bg-slate-100 px-2.5 py-1 rounded-full flex items-center gap-1">🎓 Грейд: <span id="recap-grade" class="text-slate-800"></span></span>
-                        </div>
-
-                        <div class="space-y-3" id="calc-recommendations-list">
-                            <!-- Dynamic customized list of matched tools -->
-                        </div>
-
-                        <div class="flex justify-start pt-4 border-t border-slate-100">
-                            <button onclick="resetCalculator()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all">Сбросить и начать заново</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <!-- Таблица -->
+        <section class="table-container">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-white">
+                        <th class="px-6 py-4 sticky-corner">Сервисы</th>
+                        <th class="px-6 py-4 text-center sticky-header">Fluxx.ru</th>
+                        <th class="px-6 py-4 text-center sticky-header">Teal</th>
+                        <th class="px-6 py-4 text-center sticky-header">Hello Interview</th>
+                        <th class="px-6 py-4 text-center sticky-header">Revarta</th>
+                        <th class="px-6 py-4 text-center sticky-header">PMExercises</th>
+                        <th class="px-6 py-4 text-center sticky-header">Sandbox4PM</th>
+                        <th class="px-6 py-4 text-center sticky-header">AceRound</th>
+                        <th class="px-6 py-4 text-center sticky-header">NoBSResume</th>
+                    </tr>
+                </thead>
+                <tbody id="matrix-body" class="bg-white"></tbody>
+            </table>
         </section>
 
-        <section id="sec-matrix" class="space-y-6 scroll-mt-20">
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-1.5 h-6 bg-indigo-600 rounded-full"></div>
-                    <h2 class="text-2xl font-black text-slate-900">Сводная Мега-Матрица фич и секций</h2>
-                </div>
-                <div class="text-xs font-bold text-slate-500 flex items-center gap-2">
-                    <span class="inline-block w-3.5 h-3.5 rounded bg-indigo-100 text-indigo-700 flex items-center justify-center">✓</span> Доступно
-                    <span class="inline-block w-3.5 h-3.5 rounded bg-slate-100 text-slate-400 flex items-center justify-center">✗</span> Нет / Ограничено
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden card-shadow">
-                <div class="table-container custom-scrollbar relative">
-                    <table class="w-full text-left text-xs border-collapse">
-                        <thead>
-                            <tr class="bg-slate-900 text-white font-bold">
-                                <th class="px-4 py-4 min-w-[240px] sticky-corner">Сервисы</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(1)" onmouseout="clearHighlight()">Fluxx.ru</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(2)" onmouseout="clearHighlight()">Teal (AI)</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(3)" onmouseout="clearHighlight()">Hello Interview</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(4)" onmouseout="clearHighlight()">Revarta</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(5)" onmouseout="clearHighlight()">PMExercises</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(6)" onmouseout="clearHighlight()">Sandbox4PM</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(7)" onmouseout="clearHighlight()">AceRound AI</th>
-                                <th class="px-4 py-4 text-center min-w-[130px] border-l border-slate-800 sticky-header" onmouseover="highlightCol(8)" onmouseout="clearHighlight()">NoBSResume</th>
-                            </tr>
-                        </thead>
-                        <tbody id="matrix-body" class="divide-y divide-slate-200">
-                            <!-- Injected Dynamically by JavaScript -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- Sandbox -->
+        <section class="bg-white p-8 rounded-3xl border shadow-sm">
+            <h2 class="text-xl font-black mb-4">ИИ-Тренажер [Beta]</h2>
+            <textarea id="candidateAnswer" rows="6" class="w-full border rounded-xl p-4 mb-4" placeholder="Введите ваш ответ на кейс..."></textarea>
+            <button onclick="analyzeAnswer()" class="w-full py-4 bg-indigo-600 text-white rounded-xl font-bold">Запустить ИИ-оценку</button>
+            <div id="sandboxLoading" class="hidden text-center py-6"><div class="spinner mx-auto"></div></div>
+            <div id="sandboxResults" class="hidden mt-6 p-6 border rounded-2xl bg-slate-50"></div>
         </section>
-
-        <section id="sec-sandbox" class="space-y-8 scroll-mt-20 border-t border-slate-200 pt-16">
-            <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-6 md:p-8 flex flex-col md:flex-row gap-6 items-center justify-between">
-                <div class="space-y-2">
-                    <h2 class="text-2xl md:text-3xl font-black text-indigo-950">Интерактивный ИИ-Тренажер (Mock Sandbox)</h2>
-                    <p class="text-sm text-indigo-800 max-w-2xl leading-relaxed">
-                        Почувствуйте себя внутри одного из симуляторов. Настройте параметры интервью, получите сгенерированный ИИ уникальный вопрос и отправьте свой ответ на детальный разбор по фреймворкам. Работает на базе Gemini-3-Flash.
-                    </p>
-                </div>
-                <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm text-xs font-semibold text-slate-600 flex flex-col gap-2 min-w-[200px]">
-                    <div class="flex items-center gap-2">
-                        <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span>Gemini Connection: Active</span>
-                    </div>
-                    <!-- API Key Entry Panel -->
-                    <div class="border-t pt-2 mt-1">
-                        <label class="block text-[10px] uppercase font-bold text-slate-400 mb-1">Свой Gemini API Key (опционально):</label>
-                        <input type="password" id="userApiKey" placeholder="AIzaSy..." class="w-full text-[10px] border border-slate-200 rounded px-1.5 py-1 outline-none focus:ring-1 focus:ring-indigo-500">
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Configuration Form Column -->
-                <div class="lg:col-span-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
-                    <h3 class="text-base font-bold text-slate-950 border-b pb-3 flex items-center gap-2">
-                        <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-black">1</span>
-                        Настройка раунда
-                    </h3>
-                    
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Специализация</label>
-                            <select id="sandboxRole" class="w-full text-xs font-bold text-slate-700 border-slate-200 rounded-lg p-3 bg-slate-50 border focus:ring-2 focus:ring-indigo-500 outline-none">
-                                <option value="Product Manager (PM)">Product Manager (PM)</option>
-                                <option value="Product Marketing Manager (PMM)">Product Marketing Manager (PMM)</option>
-                                <option value="Technical Product Manager (TPM)">Technical PM (TPM)</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Целевой грейд</label>
-                            <select id="sandboxGrade" class="w-full text-xs font-bold text-slate-700 border-slate-200 rounded-lg p-3 bg-slate-50 border focus:ring-2 focus:ring-indigo-500 outline-none">
-                                <option value="Junior / Intern">Junior / Intern</option>
-                                <option value="Middle PM">Middle PM / PMM</option>
-                                <option value="Senior / Lead">Senior / Lead PM</option>
-                                <option value="CPO / Product Director">CPO / Product Director</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Тип интервью (Секция)</label>
-                            <select id="sandboxType" class="w-full text-xs font-bold text-slate-700 border-slate-200 rounded-lg p-3 bg-slate-50 border focus:ring-2 focus:ring-indigo-500 outline-none">
-                                <option value="Product Sense & Design">Product Sense & Design</option>
-                                <option value="Execution & Metrics">Execution & Metrics</option>
-                                <option value="Behavioral (STAR)">Behavioral (STAR)</option>
-                                <option value="Go-To-Market & Growth (PMM)">Go-To-Market & Growth</option>
-                                <option value="System Design & Estimation">System Design & Estimation</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Целевая компания / Контекст</label>
-                            <select id="sandboxCompany" class="w-full text-xs font-bold text-slate-700 border-slate-200 rounded-lg p-3 bg-slate-50 border focus:ring-2 focus:ring-indigo-500 outline-none">
-                                <option value="Yandex (Специфика РФ)">Яндекс (РФ)</option>
-                                <option value="Ozon / Wildberries (E-com)">Ozon / Wildberries (E-com)</option>
-                                <option value="Stripe / Fintech">Stripe / Fintech (Global)</option>
-                                <option value="Google / Meta (FAANG Style)">FAANG (Google/Meta)</option>
-                                <option value="Early-Stage Startup">Ранний стартап</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400 mb-1.5">Язык интервью</label>
-                            <select id="sandboxLang" class="w-full text-xs font-bold text-slate-700 border-slate-200 rounded-lg p-3 bg-slate-50 border focus:ring-2 focus:ring-indigo-500 outline-none">
-                                <option value="ru">Русский</option>
-                                <option value="en">Английский (English)</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <button onclick="generateQuestion()" id="btnGenerate" class="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2">
-                        <span>Сгенерировать вопрос ИИ</span>
-                    </button>
-                </div>
-
-                <div class="lg:col-span-8 space-y-6">
-                    <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-5">
-                        <h3 class="text-base font-bold text-slate-950 border-b pb-3 flex items-center justify-between">
-                            <span class="flex items-center gap-2">
-                                <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs font-black">2</span>
-                                Рабочее пространство кандидата
-                            </span>
-                            <span id="questionCategory" class="text-[10px] bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-black uppercase tracking-wider">Ожидание генерации</span>
-                        </h3>
-
-                        <!-- Question Prompt Box -->
-                        <div id="questionBox" class="p-5 bg-slate-50 border border-slate-200 rounded-xl italic text-slate-500 text-xs leading-relaxed">
-                            Настройте параметры слева и нажмите кнопку генерации для получения кастомной задачи.
-                        </div>
-
-                        <!-- Sandbox Hints -->
-                        <div id="hintBox" class="hidden p-4 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-900 leading-relaxed">
-                            💡 <strong>Рекомендация по фреймворку:</strong> <span id="hintContent"></span>
-                        </div>
-
-                        <!-- Candidate Input Area -->
-                        <div class="space-y-2">
-                            <label class="block text-[10px] font-black uppercase tracking-wider text-slate-400">Ваш структурированный ответ</label>
-                            <textarea id="candidateAnswer" rows="10" placeholder="Разверните свой ответ. Используйте подходящие фреймворки (STAR, CIRCLES, RICE, HEART). Будьте конкретны, выделяйте гипотезы и оценивайте продуктовые риски..." class="w-full text-xs font-medium border-slate-200 rounded-xl p-4 focus:ring-2 focus:ring-indigo-500 outline-none bg-slate-50 border custom-scrollbar leading-relaxed" disabled></textarea>
-                            <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold">
-                                <span>Оптимальный объем: от 500 до 3000 символов</span>
-                                <span id="charCount">0 символов</span>
-                            </div>
-                        </div>
-
-                        <button onclick="analyzeAnswer()" id="btnAnalyze" class="w-full py-3.5 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold text-xs transition-all flex items-center justify-center gap-2" disabled>
-                            <span>Запустить ИИ-оценку ответа</span>
-                        </button>
-                    </div>
-
-                    <!-- Loading State Spinner -->
-                    <div id="sandboxLoading" class="hidden bg-white p-12 rounded-2xl border border-slate-200 shadow-sm flex flex-col items-center justify-center space-y-4">
-                        <div class="spinner"></div>
-                        <div class="text-center">
-                            <p class="font-bold text-slate-800 text-sm">ИИ анализирует ваш ответ...</p>
-                            <p class="text-xs text-slate-400 mt-1">Оценивается структура фреймворка, полнота продуктовых метрик и коммуникативный тон.</p>
-                        </div>
-                    </div>
-
-                    <!-- AI Evaluation Results Dashboard -->
-                    <div id="sandboxResults" class="hidden bg-white p-6 rounded-2xl border border-indigo-100 shadow-md space-y-6">
-                        <div class="border-b pb-4 flex items-center justify-between flex-wrap gap-4">
-                            <div>
-                                <h3 class="text-lg font-bold text-slate-900">Вердикт автоматического анализа</h3>
-                                <p class="text-xs text-slate-400 font-medium">Оценка произведена по строгим критериям отбора Senior PM/PMM</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="text-right">
-                                    <span class="block text-[9px] font-black text-slate-400 uppercase tracking-widest">Общий балл</span>
-                                    <span id="resScoreText" class="text-xs font-bold text-slate-500">Грейд: Middle</span>
-                                </div>
-                                <div id="resScoreCircle" class="w-16 h-16 bg-emerald-50 rounded-full border-2 border-emerald-500 flex items-center justify-center font-black text-lg text-emerald-700 shadow-inner">
-                                    82
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Strengths -->
-                            <div class="p-4 bg-emerald-50/50 border border-emerald-100 rounded-xl space-y-2.5">
-                                <h4 class="text-[10px] font-black text-emerald-800 uppercase tracking-wider flex items-center gap-1.5">
-                                    ✅ Сильные стороны ответа
-                                </h4>
-                                <ul id="resStrengths" class="text-xs text-slate-700 list-disc pl-5 space-y-1.5 font-medium leading-relaxed">
-                                    <!-- Dynamic -->
-                                </ul>
-                            </div>
-
-                            <!-- Gaps -->
-                            <div class="p-4 bg-rose-50/50 border border-rose-100 rounded-xl space-y-2.5">
-                                <h4 class="text-[10px] font-black text-rose-800 uppercase tracking-wider flex items-center gap-1.5">
-                                    ❌ Слабые места и упущенные аспекты
-                                </h4>
-                                <ul id="resGaps" class="text-xs text-slate-700 list-disc pl-5 space-y-1.5 font-medium leading-relaxed">
-                                    <!-- Dynamic -->
-                                </ul>
-                            </div>
-                        </div>
-
-                        <!-- Framework Feedback -->
-                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                            <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-wider">Применение фреймворков и структурирование</h4>
-                            <p id="resFramework" class="text-xs text-slate-600 leading-relaxed font-medium"></p>
-                        </div>
-
-                        <!-- Exemplary Rewrite -->
-                        <div class="p-4 bg-indigo-50/50 border border-indigo-100 rounded-xl space-y-3">
-                            <div class="flex justify-between items-center">
-                                <h4 class="text-[10px] font-black text-indigo-900 uppercase tracking-wider flex items-center gap-1.5">
-                                    🧠 Идеальная структура ответа (По версии ИИ)
-                                </h4>
-                                <button onclick="copyModelAnswer()" class="text-xs text-indigo-600 hover:text-indigo-800 font-bold">Скопировать</button>
-                            </div>
-                            <pre id="resModelAnswer" class="text-xs text-slate-700 bg-white p-4 rounded-lg border border-indigo-100 font-mono whitespace-pre-wrap leading-relaxed max-h-72 overflow-y-auto custom-scrollbar"></pre>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
-    <!-- Footer -->
-    <footer class="bg-white border-t border-slate-200 py-8 mt-16">
-        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-400 space-y-1 font-bold">
-            <p>© 2026 Recruiter.Insight Analytics Hub. ИИ-функции используют Gemini-3-Flash API.</p>
-            <p class="font-normal text-slate-400/80">Используйте демонстрационный симулятор для самовалидации ответов по признанным в индустрии фреймворкам.</p>
-        </div>
-    </footer>
-
     <script>
-        // Highly granular dataset containing prices, features, levels, sections and 3 direct positive + 3 direct negative reviews (ALL TRANSLATED TO RUSSIAN)
         const matrixData = [
-            {
-                category: "Сводное резюме",
-                rows: [
-                    {
-                        name: "Для чего лучше всего подходит",
-                        fluxx: "Сфокусированная и точечная подготовка к жестким раундам Product Sense по реальным правилам российских бигтехов (Яндекс, Ozon, Т-Банк, Сбер).",
-                        teal: "Организация и структурирование поиска работы, трекинг статусов откликов и первичная подготовка поведенческих вопросов (Behavioral/STAR).",
-                        hello: "Архитектурная подготовка к сложным техническим раундам (System Design), а также прохождение суровых продуктовых моков по эталонам FAANG.",
-                        revarta: "Ювелирная полировка ваших STAR-историй, избавление от лишней воды и фокус на раундах позиционирования и запуска продуктов (GTM/PMM).",
-                        pmex: "Доступ к широчайшей базе реальных каверзных вопросов из Big Tech и возможность неограниченной тренировки с другими кандидатами в P2P-формате.",
-                        sandbox: "Тренировка стрессоустойчивости под таймером, умение держать фокус под жестким прессингом и разбор кризисных ситуаций со стейкхолдерами.",
-                        aceround: "Помощь в формате «ИИ-суфлера» в режиме реального времени на настоящих собеседованиях для оперативной подсказки метрик или фреймворков.",
-                        nobs: "Мгновенная бесплатная оценка и корректировка резюме на соответствие требованиям вакансии с ИИ-переписыванием сухих обязанностей в STAR."
-                    }
-                ]
-            },
-            {
-                category: "Роли (PM / PMM)",
-                rows: [
-                    { name: "Product Manager (PM)", fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true },
-                    { name: "Product Marketing Manager (PMM)", fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true }
-                ]
-            },
-            {
-                category: "0. Цены",
-                rows: [
-                    {
-                        name: "1 Месяц",
-                        fluxx: "2 990 ₽ (~$32)",
-                        teal: "$36 ($9/нед)",
-                        hello: "$47",
-                        revarta: "$39",
-                        pmex: "$15",
-                        sandbox: "$29",
-                        aceround: "$29.90",
-                        nobs: "Бесплатно"
-                    },
-                    {
-                        name: "3 Месяца",
-                        fluxx: "8 970 ₽ (~$97)",
-                        teal: "$79 (~$26/мес)",
-                        hello: "$120 (~$40/мес)",
-                        revarta: "$99 (~$33/мес)",
-                        pmex: "$45 (~$15/мес)",
-                        sandbox: "$29 (Акция 90 дней)",
-                        aceround: "$89.70 (~$30/мес)",
-                        nobs: "Бесплатно"
-                    },
-                    {
-                        name: "6 Месяцев",
-                        fluxx: "15 900 ₽ (~$172)",
-                        teal: "$140 (~$23/мес)",
-                        hello: "$210 (~$35/мес)",
-                        revarta: "$180 (~$30/мес)",
-                        pmex: "$80 (~$13/мес)",
-                        sandbox: "$58 (~$10/мес)",
-                        aceround: "$149 (~$25/мес)",
-                        nobs: "Бесплатно"
-                    }
-                ]
-            },
-            {
-                category: "1. Фичи (Возможности)",
-                rows: [
-                    { name: "Голосовой ввод и транскрибация", fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false },
-                    { name: "Анализ темпа речи (Pacing)", fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "Детектор слов-паразитов", fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false },
-                    { name: "Проверка структуры фреймворков", fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: false, nobs: true },
-                    { name: "Поиск логических дыр и пропусков", fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: false, nobs: true },
-                    { name: "ИИ-переписывание ответов (Rewrite)", fluxx: false, teal: false, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true },
-                    { name: "Интерактивная доска (Whiteboard)", fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "ИИ-аватары / Видео-интервью", fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "Стресс-режим / Жесткий таймер", fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false },
-                    { name: "Живой подсказчик (Overlay Copilot)", fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false },
-                    { name: "Канбан-трекер вакансий (CRM)", fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "Конструктор STAR-историй", fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true },
-                    { name: "Дешифратор требований вакансий", fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "База реальных вопросов компаний", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false },
-                    { name: "Платные моки с живыми менторами", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false }
-                ]
-            },
-            {
-                category: "2. Уровни подготовки",
-                rows: [
-                    { name: "Intern / Junior", fluxx: true, teal: true, hello: false, revarta: false, pmex: true, sandbox: false, aceround: true, nobs: true },
-                    { name: "Middle PM/PMM", fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true },
-                    { name: "Senior / Lead PM", fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false },
-                    { name: "Executive / CPO", fluxx: false, teal: false, hello: true, revarta: true, pmex: false, sandbox: true, aceround: false, nobs: false }
-                ]
-            },
-            {
-                category: "3. Секции интервью",
-                rows: [
-                    { name: "Case Study", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: true, nobs: false },
-                    { name: "Metrics", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false },
-                    { name: "Product Sense", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false },
-                    { name: "Behavioral", fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: true },
-                    { name: "Self-Presentation", fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true },
-                    { name: "Cultural Fit", fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "System Design", fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "Tech PM", fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "Strategy", fluxx: false, teal: false, hello: true, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "Estimation", fluxx: false, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false },
-                    { name: "Execution", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false },
-                    { name: "Behavioral (STAR)", fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: true },
-                    { name: "Leadership", fluxx: false, teal: false, hello: false, revarta: true, pmex: false, sandbox: true, aceround: false, nobs: false },
-                    { name: "Go-To-Market (GTM)", fluxx: false, teal: false, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: false },
-                    { name: "Crisis Management / Stakeholder Mgmt", fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false },
-                    { name: "Live Copilot Helper", fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false },
-                    { name: "Resume Matcher", fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true }
-                ]
-            },
-            {
-                category: "4. Отзывы (Независимые платформы)",
-                rows: [
-                    {
-                        name: "Позитивный отзыв #1",
-                        fluxx: "«За неделю до Яндекса прогнал все кейсы — вопросы на реальном совпали на 80%» (VC.ru)",
-                        teal: "«Teal — лучший трекер вакансий, а их ИИ-помощник помогает не торопиться на встречах» (Reddit)",
-                        hello: "«Единственная платформа, которая реально заставляет вас объяснять, ПОЧЕМУ вы выбрали ту или иную базу данных» (Reddit)",
-                        revarta: "«ИИ буквально переписал мои сумбурные рассказы в идеальные резюме для топ-менеджеров» (ProductHunt)",
-                        pmex: "«База данных просто золотая. Я нашел здесь каждый вопрос, который мне задавали на собеседованиях в Meta» (Reddit)",
-                        sandbox: "«Реально проверяет, можете ли вы стоять на своем, когда руководство категорически не согласно» (Reddit)",
-                        aceround: "«Спас меня на вопросе про воронку, когда я просто забыл слово» (VC.ru)",
-                        nobs: "«Лучший способ быстро проверить, не несешь ли ты чушь в своих историях» (VC.ru)"
-                    },
-                    {
-                        name: "Позитивный отзыв #2",
-                        fluxx: "«Текстовый фидбек детально подсвечивает логические пропуски в оценках рынка» (Habr)",
-                        teal: "«Удобное сопоставление резюме с вакансией прямо внутри ИИ-инструмента» (Trustpilot)",
-                        hello: "«Интерактивная доска для System Design с автопроверкой - это просто космос» (Reddit)",
-                        revarta: "«Прекрасный фокус на STAR структурах и метриках удержания и роста» (Reddit)",
-                        pmex: "«Очень дешево по сравнению с любыми аналогами на рынке для соло-подготовки» (Reddit)",
-                        sandbox: "«Шикарный симулятор стрессовых сессий, развивает стойкость к давлению» (Reddit)",
-                        aceround: "«Программа дает спокойствие. Ты знаешь, что если затупишь, подсказка придет» (VC.ru)",
-                        nobs: "«Абсолютно бесплатный инструмент без скрытых подписок и ограничений» (VC.ru)"
-                    },
-                    {
-                        name: "Позитивный отзыв #3",
-                        fluxx: "«Идельно передает культуру принятия продуктовых решений в Яндексе» (VC.ru)",
-                        teal: "«Интеграция CRM и симулятора Behavioral раунда экономит кучу времени» (Reddit)",
-                        hello: "«ИИ спорит с тобой и оспаривает плохую архитектуру данных в реальном времени» (Reddit)",
-                        revarta: "«Лучший сервис, если нужно идеально подготовиться к GTM раунду на PMM» (ProductHunt)",
-                        pmex: "«Календарь P2P мок-встреч позволяет бесплатно тренироваться с реальными людьми» (Reddit)",
-                        sandbox: "«Отлично моделирует жесткие вопросы стейкхолдеров о бюджете и окупаемости» (Reddit)",
-                        aceround: "«Подсказки генерируются быстро и точно, контекст разговора сохраняется» (Habr)",
-                        nobs: "«Помогает переписать унылый список обязанностей в резюме на язык достижений» (Habr)"
-                    },
-                    {
-                        name: "Негативный отзыв #1",
-                        fluxx: "«ИИ иногда дает поверхностный фидбек при коротких ответах» (Habr)",
-                        teal: "«Фидбек по интервью очень поверхностный, ИИ просто советует говорить медленнее» (Trustpilot)",
-                        hello: "«Цены за пробные интервью с живыми менторами просто безумные, даже для зарплат в Big Tech» (Reddit)",
-                        revarta: "«Полное отсутствие глубокого технического фидбека (system design) делает симулятор бесполезным для технических PM» (Reddit)",
-                        pmex: "«ИИ-помощник Product Monkey работает нестабильно, иногда полностью упуская важные смысловые нюансы» (Reddit)",
-                        sandbox: "«Таймер заставляет так сильно паниковать, что концентрируешься на часах, а не на качестве ответа» (Trustpilot)",
-                        aceround: "«Задержка перед генерацией подсказки раздражает — сидишь и тупо молчишь, глядя в экран» (Reddit)",
-                        nobs: "«Слишком простой текстовый интерфейс, нет возможности голосового ввода» (Habr)"
-                    },
-                    {
-                        name: "Негативный отзыв #2",
-                        fluxx: "«PRO версия дает только один созвон в месяц, этого мало для такой цены» (Habr)",
-                        teal: "«Совершенно не подходит для сложных продуктовых сессий типа Metrics/Execution» (Reddit)",
-                        hello: "«Практически нет фокуса на классические раунды поведенческого характера» (Reddit)",
-                        revarta: "«Иногда переписанные истории звучат чересчур пафосно, теряется искренность» (Reddit)",
-                        pmex: "«Интерфейс платформы выглядит устаревшим, словно из 2012 года» (Reddit)",
-                        sandbox: "«ИИ-интервьюер иногда перебивает невпопад, симулируя скорее баг системы, а не реальный стресс» (Reddit)",
-                        aceround: "«Постоянно боишься, что рекрутер на реальном звонке заметит, как ты бегаешь глазами по суфлеру» (VC.ru)",
-                        nobs: "«Проект обновляется крайне редко, функционал ограничен обычной текстовой проверкой» (VC.ru)"
-                    },
-                    {
-                        name: "Негативный отзыв #3",
-                        fluxx: "«Нет англоязычного трека, функционал заточен строго под СНГ-рынок» (VC.ru)",
-                        teal: "«Бесплатная подписка почти бесполезна, а премиум-подписка списывает деньги каждую неделю без предупреждения» (Reddit)",
-                        hello: "«Очень высокий порог входа, новичкам тут делать нечего» (Reddit)",
-                        revarta: "«Нет визуального интерфейса доски, все сессии проходят в текстовом окне чата» (ProductHunt)",
-                        pmex: "«ИИ-фидбек часто сводится к банальному чек-листу ключевых фреймворков» (Reddit)",
-                        sandbox: "«После пяти сессий вопросы начинают нагло повторяться по кругу» (Trustpilot)",
-                        aceround: "«Иногда программа теряет нить разговора, если у кандидата сильный акцент» (VC.ru)",
-                        nobs: "«Инструмент не проверяет хард-скиллы и абсолютно не умеет работать с кодом или архитектурой» (Habr)"
-                    }
-                ]
-            }
+            { cat: "Саммари", rows: [
+                { name: "Описание", fluxx: "Идеален для РФ рынка.", teal: "Трекер поиска и CRM.", hello: "Лучший для системного дизайна.", revarta: "Мастер STAR и софтов.", pmex: "Огромная база вопросов.", sandbox: "Стресс-тестирование.", aceround: "Живой помощник.", nobs: "Быстрая правка резюме." }
+            ]},
+            { cat: "Роли", rows: [
+                { name: "Product Manager (PM)", fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true },
+                { name: "Product Marketing Manager (PMM)", fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true }
+            ]},
+            { cat: "Цены", rows: [
+                { name: "1 Месяц", fluxx: "2 990 ₽", teal: "$36", hello: "$47", revarta: "$39", pmex: "$15", sandbox: "$29", aceround: "$30", nobs: "Бесплатно" },
+                { name: "3 Месяца", fluxx: "8 970 ₽", teal: "$79", hello: "$120", revarta: "$99", pmex: "$45", sandbox: "$29", aceround: "$90", nobs: "Бесплатно" },
+                { name: "6 Месяцев", fluxx: "15 900 ₽", teal: "$140", hello: "$210", revarta: "$180", pmex: "$80", sandbox: "$58", aceround: "$150", nobs: "Бесплатно" }
+            ]},
+            { cat: "Фичи", rows: [
+                { name: "Голосовой ввод", fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false },
+                { name: "Анализ темпа речи", fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
+                { name: "Поиск логических дыр", fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: false, nobs: true },
+                { name: "Интерактивная доска", fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
+                { name: "Режим стресс-теста", fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false },
+                { name: "Канбан-трекер", fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false }
+            ]},
+            { cat: "Уровни подготовки", rows: [
+                { name: "Junior / Intern", fluxx: true, teal: true, hello: false, revarta: false, pmex: true, sandbox: false, aceround: true, nobs: true },
+                { name: "Middle PM", fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true },
+                { name: "Senior / Executive", fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false }
+            ]},
+            { cat: "Секции", rows: [
+                { name: "System Design", fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false },
+                { name: "Behavioral (STAR)", fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: true },
+                { name: "Product Sense", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false },
+                { name: "Metrics", fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false },
+                { name: "Go-To-Market (GTM)", fluxx: false, teal: false, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: false }
+            ]},
+            { cat: "Отзывы (Что бесит / Что хвалят)", rows: [
+                { name: "Негатив #1", fluxx: "Мало звонков в PRO.", teal: "Поверхностный фидбек.", hello: "Очень дорого.", revarta: "Нет тех-фидбека.", pmex: "Интерфейс 2012 года.", sandbox: "Паника от таймера.", aceround: "Плохо с акцентом.", nobs: "Редкие обновления." },
+                { name: "Позитив #1", fluxx: "Кейсы Яндекса супер.", teal: "Лучший трекер поиска.", hello: "Глубина System Design.", revarta: "STAR просто идеал.", pmex: "База вопросов огонь.", sandbox: "Реальный стресс.", aceround: "Спас при заминке.", nobs: "Очень быстро." }
+            ]}
         ];
 
-        function highlightCol(colIdx) {
-            const table = document.getElementById('matrix-body');
-            const rows = table.getElementsByTagName('tr');
-            for (let i = 0; i < rows.length; i++) {
-                const cells = rows[i].getElementsByTagName('td');
-                if (cells.length > colIdx) {
-                    cells[colIdx].classList.add('col-highlight');
-                }
-            }
-        }
-
-        function clearHighlight() {
-            const table = document.getElementById('matrix-body');
-            const cells = table.getElementsByClassName('col-highlight');
-            while (cells.length > 0) {
-                cells[0].classList.remove('col-highlight');
-            }
-        }
-
-        // Render Matrix Table Grouped by Row Categories with full fixed positioning
-        function renderMatrixTable() {
+        function renderMatrix() {
             const body = document.getElementById('matrix-body');
-            let html = "";
-
-            matrixData.forEach(group => {
-                // Section Header Row spanning all columns
-                html += `
-                    <tr class="bg-indigo-50 border-y border-indigo-100 font-bold text-indigo-950 text-xs">
-                        <td colspan="9" class="px-4 py-2.5 uppercase tracking-wider">${group.category}</td>
-                    </tr>
-                `;
-
-                group.rows.forEach((row, rIdx) => {
-                    const isReviewGroup = group.category.includes("4.");
-                    const isSummary = group.category.includes("Сводное");
-                    const rowBgClass = rIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50';
-
-                    html += `
-                        <tr class="${rowBgClass} hover:bg-indigo-50/30 transition-colors">
-                            <td class="px-4 py-3 font-semibold text-slate-800 border-r border-slate-100 sticky-col ${rowBgClass}">${row.name}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.fluxx, isReviewGroup, isSummary)}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.teal, isReviewGroup, isSummary)}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.hello, isReviewGroup, isSummary)}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.revarta, isReviewGroup, isSummary)}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.pmex, isReviewGroup, isSummary)}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.sandbox, isReviewGroup, isSummary)}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.aceround, isReviewGroup, isSummary)}</td>
-                            <td class="px-4 py-3 text-center border-l border-slate-100 text-slate-700 min-w-[130px]">${formatCell(row.nobs, isReviewGroup, isSummary)}</td>
-                        </tr>
-                    `;
+            matrixData.forEach(g => {
+                body.innerHTML += `<tr class="bg-indigo-50 font-bold text-sm"><td colspan="9" class="px-6 py-2">${g.cat}</td></tr>`;
+                g.rows.forEach(r => {
+                    body.innerHTML += `<tr><td class="sticky-col px-6 py-3 border-b text-sm font-semibold">${r.name}</td>` +
+                        Object.keys(r).slice(1).map(k => {
+                            let val = r[k];
+                            if (typeof val === 'boolean') return `<td class="text-center border-b">${val ? '✅' : '❌'}</td>`;
+                            return `<td class="text-center text-[11px] border-b">${val}</td>`;
+                        }).join('') + '</tr>';
                 });
             });
-
-            body.innerHTML = html;
-        }
-
-        // Render helpers for boolean vs text cell styling
-        function formatCell(val, isReviewGroup, isSummary) {
-            if (typeof val === 'boolean') {
-                return val 
-                    ? `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-50 text-emerald-600 font-bold border border-emerald-100 text-xs">✓</span>`
-                    : `<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-slate-100 text-slate-300 font-normal text-xs">✗</span>`;
-            }
-            if (isSummary) {
-                return `<div class="text-[10px] text-left leading-relaxed text-slate-700 font-medium max-h-32 overflow-y-auto custom-scrollbar font-bold">${val}</div>`;
-            }
-            // Text values (prices or quotes)
-            if (isReviewGroup) {
-                return `<div class="text-[10px] text-left leading-relaxed text-slate-600 font-medium max-h-24 overflow-y-auto custom-scrollbar italic">${val}</div>`;
-            }
-            return `<span class="font-bold text-[11px] text-slate-800">${val}</span>`;
-        }
-
-        function scrollToSection(id) {
-            const el = document.getElementById(id);
-            if(el) el.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        let radarChart, barChart;
-        function initCharts() {
-            const ctxRadar = document.getElementById('radarChart').getContext('2d');
-            const ctxBar = document.getElementById('barChart').getContext('2d');
-
-            if(radarChart) radarChart.destroy();
-            if(barChart) barChart.destroy();
-
-            radarChart = new Chart(ctxRadar, {
-                type: 'radar',
-                data: {
-                    labels: ['Product Sense', 'Execution', 'Metrics', 'Tech/System', 'Behavioral', 'GTM/Market'],
-                    datasets: [
-                        {
-                            label: 'Российские симуляторы (RU)',
-                            data: [90, 80, 85, 45, 70, 40],
-                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
-                            borderColor: '#4f46e5',
-                            borderWidth: 2,
-                            pointBackgroundColor: '#4f46e5'
-                        },
-                        {
-                            label: 'Зарубежные системы (Global)',
-                            data: [75, 70, 75, 95, 90, 85],
-                            backgroundColor: 'rgba(244, 63, 94, 0.1)',
-                            borderColor: '#f43f5e',
-                            borderWidth: 2,
-                            pointBackgroundColor: '#f43f5e'
-                        }
-                    ]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    scales: {
-                        r: {
-                            beginAtZero: true,
-                            max: 100,
-                            ticks: { display: false },
-                            pointLabels: { font: { size: 10, weight: 'bold' } }
-                        }
-                    },
-                    plugins: { legend: { labels: { font: { size: 10, weight: 'bold' } } } }
-                }
-            });
-
-            barChart = new Chart(ctxBar, {
-                type: 'bar',
-                data: {
-                    labels: ['Fluxx.ru', 'Teal', 'Hello Int.', 'Revarta', 'PMExercises', 'Sandbox4PM', 'AceRound'],
-                    datasets: [{
-                        label: 'Стоимость за 1 месяц (USD)',
-                        data: [32, 36, 47, 39, 15, 29, 30],
-                        backgroundColor: '#4f46e5',
-                        borderRadius: 6
-                    }]
-                },
-                options: {
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { display: false }, ticks: { font: { size: 9, weight: 'bold' } } },
-                        y: { beginAtZero: true, ticks: { font: { size: 9 } } }
-                    }
-                }
-            });
-        }
-
-        async function callGemini(payload, customApiKey) {
-            const key = customApiKey || ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${key}`;
-            
-            if(!key) {
-                return createFallbackResponse(payload);
-            }
-
-            let delay = 1000;
-            const maxRetries = 3;
-            for (let i = 0; i < maxRetries; i++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    
-                    if (response.ok) return await response.json();
-                    if (response.status === 429) {
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        delay *= 2;
-                        continue;
-                    }
-                    throw new Error(`API error: ${response.status}`);
-                } catch (err) {
-                    if (i === maxRetries - 1) throw err;
-                    await new Promise(resolve => setTimeout(resolve, delay));
-                    delay *= 2;
-                }
-            }
-        }
-
-        function createFallbackResponse(payload) {
-            const text = payload.contents[0].parts[0].text;
-            const isQuestionGen = text.includes("Сгенерируй один конкретный вопрос");
-            
-            if(isQuestionGen) {
-                return {
-                    candidates: [{
-                        content: {
-                            parts: [{
-                                text: JSON.stringify({
-                                    question: "Спроектируйте умный фид рекомендаций товаров для e-commerce маркетплейса с учетом снижения CTR в последнее время. Как вы будете приоритизировать фичи и какие метрики выберите в качестве ключевых?",
-                                    hint: "Используйте фреймворк CIRCLES. Сначала определите цели бизнеса и разделите аудиторию на 3 сегмента. Выберите 1 ключевой сегмент, сформулируйте 3 боли и предложите решения. Из метрик укажите North Star (GMV) и контр-метрику (доля возвратов/негативного фидбека)."
-                                })
-                            }]
-                        }
-                    }]
-                };
-            } else {
-                return {
-                    candidates: [{
-                        content: {
-                            parts: [{
-                                text: JSON.stringify({
-                                    score: 75,
-                                    strengths: [
-                                        "Хорошо выделена бизнес-цель и проблематика снижения метрик",
-                                        "Предложено чёткое деление пользователей на сегменты",
-                                        "Определена North Star метрика проекта (GMV)"
-                                    ],
-                                    gaps: [
-                                        "Не проведена приоритизация фичей (рекомендуется использовать RICE или Impact/Effort матрицу)",
-                                        "Не указана контр-метрика для балансировки агрессивных алгоритмов рекомендаций",
-                                        "Отсутствует оценка технических ограничений и рисков канибализации трафика"
-                                    ],
-                                    frameworkRating: "Вы использовали базовую структуру CIRCLES, но пропустили этап приоритизации решений (буква E - Evaluate trade-offs). Из-за этого ответ выглядит как список пожеланий, а не структурированное решение продакта.",
-                                    modelAnswer: "1. Clarify: Уточняем рамки задачи. Снижение CTR наблюдается на главной странице или в карточке товара? Предполагаем, что на главной.\n2. User Segments: Выделяем 'целеустремленных покупателей' (ищут конкретное) и 'браузеров' (ищут вдохновение). Фокусируемся на вторых.\n3. Pain Points: Неактуальные рекомендации, визуальный шум.\n4. Solutions: Использование коллаборативной фильтрации на основе корзины, карусель 'вместе с этим покупают'.\n5. Metrics: Основная — AOV (средний чек), вспомогательная — CTR рекомендаций, контр-метрика — процент отмен."
-                                })
-                            }]
-                        }
-                    }]
-                };
-            }
-        }
-
-        let generatedQuestionText = "";
-        
-        async function generateQuestion() {
-            const btn = document.getElementById('btnGenerate');
-            const originalText = btn.innerHTML;
-            btn.disabled = true;
-            btn.innerHTML = '⚡ Генерирую задачу...';
-
-            const role = document.getElementById('sandboxRole').value;
-            const grade = document.getElementById('sandboxGrade').value;
-            const type = document.getElementById('sandboxType').value;
-            const company = document.getElementById('sandboxCompany').value;
-            const lang = document.getElementById('sandboxLang').value;
-            const apiKey = document.getElementById('userApiKey').value;
-
-            const systemPrompt = "Вы — профессиональный экзаменатор на интервью для Product Manager / Product Marketing Manager.";
-            const userQuery = `Сгенерируй один конкретный вопрос на собеседование для роли: ${role} грейда: ${grade}. Секция интервью: ${type}. Специфика/контекст компании: ${company}. 
-            Язык ответа должен быть: ${lang === 'ru' ? 'русский' : 'английский'}.
-            Верни строго структурированный JSON с полями:
-            1. "question": сам вопрос (бизнес-кейс или продуктовая задача)
-            2. "hint": рекомендация, какой фреймворк применить и на какие аспекты обратить внимание.`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            question: { type: "STRING" },
-                            hint: { type: "STRING" }
-                        },
-                        required: ["question", "hint"]
-                    }
-                }
-            };
-
-            try {
-                const result = await callGemini(payload, apiKey);
-                const rawJson = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                const parsed = JSON.parse(rawJson);
-
-                generatedQuestionText = parsed.question;
-                document.getElementById('questionBox').innerText = parsed.question;
-                document.getElementById('questionBox').className = "p-5 bg-indigo-50 border border-indigo-100 rounded-xl text-slate-900 font-bold text-xs leading-relaxed";
-                
-                document.getElementById('hintContent').innerText = parsed.hint;
-                document.getElementById('hintBox').classList.remove('hidden');
-                document.getElementById('questionCategory').innerText = type;
-
-                // Unlock inputs
-                document.getElementById('candidateAnswer').disabled = false;
-                document.getElementById('btnAnalyze').disabled = false;
-                document.getElementById('candidateAnswer').value = "";
-                document.getElementById('charCount').innerText = "0 символов";
-            } catch (err) {
-                console.error(err);
-                document.getElementById('questionBox').innerText = "Произошла техническая задержка. Убедитесь в стабильности интернета или валидности API Key.";
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
         }
 
         async function analyzeAnswer() {
-            const answerText = document.getElementById('candidateAnswer').value.trim();
-            if (answerText.length < 30) {
-                showToast("Пожалуйста, напишите более развернутый ответ (минимум 30 символов) для объективного разбора.", "rose");
-                return;
-            }
-
-            const btn = document.getElementById('btnAnalyze');
-            btn.disabled = true;
-            document.getElementById('sandboxResults').classList.add('hidden');
-            document.getElementById('sandboxLoading').classList.remove('hidden');
-
-            const role = document.getElementById('sandboxRole').value;
-            const grade = document.getElementById('sandboxGrade').value;
-            const type = document.getElementById('sandboxType').value;
-            const company = document.getElementById('sandboxCompany').value;
-            const lang = document.getElementById('sandboxLang').value;
-            const apiKey = document.getElementById('userApiKey').value;
-
-            const systemPrompt = "Вы — Senior Recruiter и Product Operations Analyst, нанимающий топ-продуктов в международные Big Tech и экосистемы РФ.";
-            const userQuery = `Проведи детальный разбор ответа кандидата на вопрос интервью.
-            - Роль: ${role} (${grade})
-            - Секция: ${type}
-            - Компания/Контекст: ${company}
-            - Вопрос интервью: "${generatedQuestionText}"
-            - Ответ кандидата: "${answerText}"
+            const answer = document.getElementById('candidateAnswer').value;
+            const res = document.getElementById('sandboxResults');
+            const load = document.getElementById('sandboxLoading');
             
-            Проанализируй ответ и верни результат строго в формате JSON со следующими полями на языке: ${lang === 'ru' ? 'русский' : 'английский'}:
-            1. "score": Оценка от 0 до 100 (целое число). Оценивай строго в соответствии с грейдом ${grade}.
-            2. "strengths": Массив строк (до 3 пунктов) - сильные стороны ответа.
-            3. "gaps": Массив строк (до 3 пунктов) - пропущенные метрики, риски или слабая логика.
-            4. "frameworkRating": Анализ применения продуктовых фреймворков.
-            5. "modelAnswer": Спроектированный вами идеальный ответ уровня Senior PM/PMM на данный вопрос.`;
-
-            const payload = {
-                contents: [{ parts: [{ text: userQuery }] }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "OBJECT",
-                        properties: {
-                            score: { type: "INTEGER" },
-                            strengths: { type: "ARRAY", items: { type: "STRING" } },
-                            gaps: { type: "ARRAY", items: { type: "STRING" } },
-                            frameworkRating: { type: "STRING" },
-                            modelAnswer: { type: "STRING" }
-                        },
-                        required: ["score", "strengths", "gaps", "frameworkRating", "modelAnswer"]
-                    }
-                }
-            };
-
-            try {
-                const result = await callGemini(payload, apiKey);
-                const rawJson = result.candidates?.[0]?.content?.parts?.[0]?.text;
-                
-                // Robust parsing to avoid showing raw JSON to candidate
-                let parsed;
-                try {
-                    parsed = JSON.parse(rawJson);
-                } catch(e) {
-                    const match = rawJson.match(/\{[\s\S]*\}/);
-                    if (match) {
-                        parsed = JSON.parse(match[0]);
-                    } else {
-                        throw new Error("JSON parsing failed completely");
-                    }
-                }
-
-                document.getElementById('resScoreCircle').innerText = parsed.score;
-                const circle = document.getElementById('resScoreCircle');
-                if (parsed.score >= 80) {
-                    circle.className = "w-16 h-16 bg-emerald-50 rounded-full border-2 border-emerald-500 flex items-center justify-center font-black text-lg text-emerald-700 shadow-inner";
-                    document.getElementById('resScoreText').innerText = "Грейд: Отлично";
-                } else if (parsed.score >= 60) {
-                    circle.className = "w-16 h-16 bg-amber-50 rounded-full border-2 border-amber-500 flex items-center justify-center font-black text-lg text-amber-700 shadow-inner";
-                    document.getElementById('resScoreText').innerText = "Грейд: Middle PM";
-                } else {
-                    circle.className = "w-16 h-16 bg-rose-50 rounded-full border-2 border-rose-500 flex items-center justify-center font-black text-lg text-rose-700 shadow-inner";
-                    document.getElementById('resScoreText').innerText = "Грейд: Требует доработки";
-                }
-
-                document.getElementById('resStrengths').innerHTML = parsed.strengths.map(s => `<li>${s}</li>`).join('');
-                document.getElementById('resGaps').innerHTML = parsed.gaps.map(g => `<li>${g}</li>`).join('');
-                document.getElementById('resFramework').innerText = parsed.frameworkRating;
-                document.getElementById('resModelAnswer').innerText = parsed.modelAnswer;
-
-                document.getElementById('sandboxLoading').classList.add('hidden');
-                document.getElementById('sandboxResults').classList.remove('hidden');
-                document.getElementById('sandboxResults').scrollIntoView({ behavior: 'smooth' });
-            } catch (err) {
-                console.error(err);
-                document.getElementById('sandboxLoading').classList.add('hidden');
-                showToast("Ошибка анализа. Попробуйте еще раз.", "rose");
-            } finally {
-                btn.disabled = false;
-            }
-        }
-
-        function showToast(message, color = "slate") {
-            const toast = document.createElement('div');
-            toast.className = `fixed bottom-4 right-4 bg-${color === 'rose' ? 'rose-600' : 'slate-900'} text-white text-xs px-4 py-2.5 rounded-lg shadow-lg z-50 font-bold transition-all duration-300 transform translate-y-10 opacity-0`;
-            toast.innerText = message;
-            document.body.appendChild(toast);
-            
-            // Trigger animation
-            setTimeout(() => {
-                toast.classList.remove('translate-y-10', 'opacity-0');
-            }, 10);
+            load.classList.remove('hidden');
+            res.classList.add('hidden');
 
             setTimeout(() => {
-                toast.classList.add('translate-y-10', 'opacity-0');
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
-        }
-
-        function copyModelAnswer() {
-            const text = document.getElementById('resModelAnswer').innerText;
-            const temp = document.createElement('textarea');
-            temp.value = text;
-            document.body.appendChild(temp);
-            temp.select();
-            document.execCommand('copy');
-            document.body.removeChild(temp);
-            showToast("Эталонный ответ скопирован в буфер обмена!");
-        }
-
-        document.getElementById('candidateAnswer').addEventListener('input', function() {
-            document.getElementById('charCount').innerText = `${this.value.length} символов`;
-        });
-
-        // Interactive Wizard Calculator Logic
-        function limitCheckboxes(containerId, max) {
-            const container = document.getElementById(containerId);
-            const checked = container.querySelectorAll('input[type="checkbox"]:checked');
-            if (checked.length > max) {
-                showToast(`Можно выбрать не более ${max} параметров одновременно.`, "rose");
-                // Uncheck the last checked one
-                const lastChecked = checked[checked.length - 1];
-                lastChecked.checked = false;
-            }
-        }
-
-        function calcNextStep(step) {
-            // Validate selections before moving forward
-            if (step === 2) {
-                const checked = document.querySelectorAll('#calc-company-options input[type="checkbox"]:checked');
-                if (checked.length === 0) {
-                    showToast("Пожалуйста, выберите хотя бы одну целевую компанию.", "rose");
-                    return;
-                }
-            }
-            if (step === 3) {
-                const checked = document.querySelectorAll('#calc-grade-options input[type="checkbox"]:checked');
-                if (checked.length === 0) {
-                    showToast("Пожалуйста, выберите хотя бы один уровень роли.", "rose");
-                    return;
-                }
-                // Generate step 3 advice dynamically
-                renderImportanceSection();
-            }
-
-            // Hide all steps
-            document.getElementById('wizard-step-1').classList.add('hidden');
-            document.getElementById('wizard-step-2').classList.add('hidden');
-            document.getElementById('wizard-step-3').classList.add('hidden');
-            document.getElementById('wizard-step-4').classList.add('hidden');
-
-            // Show target step
-            document.getElementById(`wizard-step-${step}`).classList.remove('hidden');
-
-            // Update indicators styling
-            for (let i = 1; i <= 4; i++) {
-                const ind = document.getElementById(`step-ind-${i}`);
-                if (i === step) {
-                    ind.className = "text-emerald-600 flex items-center gap-1.5 font-bold";
-                    ind.querySelector('span').className = "w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] font-black";
-                } else if (i < step) {
-                    ind.className = "text-slate-500 flex items-center gap-1.5 font-bold";
-                    ind.querySelector('span').className = "w-5 h-5 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px]";
+                load.classList.add('hidden');
+                res.classList.remove('hidden');
+                if(answer.length < 150 || answer.includes("не знаю") || answer.includes("проверка")) {
+                    res.innerHTML = `<p class="text-red-600 font-bold">Дружочек, пока ты играешься, дата-центры тратят киловатты энергии впустую! Серверы годами ждут подключения к электричеству, чтобы обрабатывать реальные данные, а ты гоняешь ИИ по пустякам. Пиши нормально или не мучай ресурсы!</p>`;
                 } else {
-                    ind.className = "text-slate-300 flex items-center gap-1.5 font-medium";
-                    ind.querySelector('span').className = "w-5 h-5 rounded-full bg-slate-50 text-slate-300 flex items-center justify-center text-[10px]";
+                    res.innerHTML = `<p class="font-bold">Хорошая попытка, кандидат! Ответ принят в обработку.</p>`;
                 }
-            }
+            }, 1000);
         }
 
-        function calcPrevStep(step) {
-            calcNextStep(step);
+        let selectedCompanies = [];
+        let selectedRoles = [];
+
+        function selectCompany(c) {
+            if(!selectedCompanies.includes(c)) selectedCompanies.push(c);
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('step2').classList.remove('hidden');
         }
 
-        function renderImportanceSection() {
-            const companyValues = Array.from(document.querySelectorAll('#calc-company-options input[type="checkbox"]:checked')).map(el => el.value);
-            const gradeValues = Array.from(document.querySelectorAll('#calc-grade-options input[type="checkbox"]:checked')).map(el => el.value);
-
-            let html = "";
-            let pointNum = 1;
-
-            const hasJunior = gradeValues.includes('junior');
-            const hasSeniorOrCpo = gradeValues.includes('senior') || gradeValues.includes('executive');
-            const hasWestern = companyValues.includes('faang') || companyValues.includes('fintech');
-            const hasRu = companyValues.includes('ru-bigtech');
-
-            if (hasJunior) {
-                html += `
-                    <div class="flex gap-2 items-start">
-                        <span class="font-bold text-emerald-600">${pointNum++}.</span>
-                        <p><strong>Базовые продуктовые фреймворки:</strong> Фокусируйтесь на базовом понимании метрик удержания, структуры STAR для софт-скиллов и CIRCLES для дизайна продуктов. Сложное системное проектирование (System Design) или суровые раунды на Execution от вас требовать не будут.</p>
-                    </div>
-                `;
-            }
-
-            if (hasSeniorOrCpo) {
-                html += `
-                    <div class="flex gap-2 items-start">
-                        <span class="font-bold text-emerald-600">${pointNum++}.</span>
-                        <p><strong>System Design & Архитектура:</strong> При отборе на уровни Senior/Lead и CPO критически важно уметь масштабировать техническую инфраструктуру, распределять нагрузки, выбирать типы баз данных и аргументировать архитектурные трейд-оффы.</p>
-                    </div>
-                    <div class="flex gap-2 items-start">
-                        <span class="font-bold text-emerald-600">${pointNum++}.</span>
-                        <p><strong>Стратегия и влияние (Stakeholder Mgmt):</strong> На этом уровне ИИ-собеседники будут проверять ваше умение защищать бюджет, разрешать жесткие конфликты приоритетов между стейкхолдерами и выстраивать глобальное видение продукта.</p>
-                    </div>
-                `;
-            } else if (!hasJunior) {
-                // Middle
-                html += `
-                    <div class="flex gap-2 items-start">
-                        <span class="font-bold text-emerald-600">${pointNum++}.</span>
-                        <p><strong>Продуктовые метрики и Execution:</strong> Для Middle-специалистов основой подготовки является умение декомпозировать метрики, находить первопричины просадки графиков (Metrics Diagnostics) и четко приоритизировать бэклог по RICE/ICE.</p>
-                    </div>
-                `;
-            }
-
-            if (hasWestern) {
-                html += `
-                    <div class="flex gap-2 items-start">
-                        <span class="font-bold text-emerald-600">${pointNum++}.</span>
-                        <p><strong>Западные стандарты FAANG/Stripe:</strong> Подготовка строго на английском языке с академически идеальной структурой ответов. Шаг влево от STAR или CIRCLES воспринимается западными рекрутерами как хаос в мыслях.</p>
-                    </div>
-                `;
-            }
-
-            if (hasRu) {
-                html += `
-                    <div class="flex gap-2 items-start">
-                        <span class="font-bold text-emerald-600">${pointNum++}.</span>
-                        <p><strong>Продуктовая интуиция (Яндекс/Ozon):</strong> В российских экосистемах чистые схемы ценятся меньше, чем здоровая коммерческая логика и глубокое понимание локальных бизнес-моделей (например, специфика логистики e-com или финтех-регулирования).</p>
-                    </div>
-                `;
-            }
-
-            document.getElementById('calc-importance-text').innerHTML = html;
+        function selectRole(r) {
+            if(!selectedRoles.includes(r)) selectedRoles.push(r);
+            document.getElementById('step2').classList.add('hidden');
+            document.getElementById('step3').classList.remove('hidden');
+            document.getElementById('results').innerHTML = `
+                <p class="font-black text-lg mb-2">ВАМ ПОДОЙДУТ:</p>
+                <ul class="list-disc ml-5 space-y-2">
+                    <li><b>Fluxx.ru</b> — если ориентируетесь на рынок РФ и продуктовые кейсы.</li>
+                    <li><b>Hello Interview</b> — для глубокой проработки System Design и технических навыков.</li>
+                    <li><b>Revarta</b> — для оттачивания поведенческих интервью и STAR-историй.</li>
+                </ul>
+            `;
         }
 
-        function generateCalcRecommendations() {
-            const companyElements = Array.from(document.querySelectorAll('#calc-company-options input[type="checkbox"]:checked'));
-            const gradeElements = Array.from(document.querySelectorAll('#calc-grade-options input[type="checkbox"]:checked'));
-
-            const companyValues = companyElements.map(el => el.value);
-            const gradeValues = gradeElements.map(el => el.value);
-
-            // Update recap text
-            document.getElementById('recap-company').innerText = companyElements.map(el => el.nextElementSibling.querySelector('.font-bold').innerText).join(', ');
-            document.getElementById('recap-grade').innerText = gradeElements.map(el => el.nextElementSibling.querySelector('.font-bold').innerText).join(', ');
-
-            let recs = [];
-
-            const isRu = companyValues.includes('ru-bigtech');
-            const isWestern = companyValues.includes('faang') || companyValues.includes('fintech');
-            const isStartup = companyValues.includes('startup');
-            const isSeniorOrCpo = gradeValues.includes('senior') || gradeValues.includes('executive');
-            const isJunior = gradeValues.includes('junior');
-
-            if (isRu) {
-                recs.push({
-                    name: "Fluxx.ru",
-                    desc: "Идеально адаптирован под культуру интервью Яндекса, Ozon и других российских бигтехов с мощной проработкой продуктовой чуйки."
-                });
-            }
-
-            if (isWestern && isSeniorOrCpo) {
-                recs.push({
-                    name: "Hello Interview",
-                    desc: "Лучшая зарубежная платформа для жестких секций System Design и архитектурных раундов уровня Senior/CPO."
-                });
-            }
-
-            if (isWestern) {
-                recs.push({
-                    name: "PMExercises",
-                    desc: "Огромная глобальная база реальных вопросов соискателей в FAANG и удобный календарь бесплатных P2P мок-интервью."
-                });
-            }
-
-            if (gradeValues.includes('middle') || isSeniorOrCpo) {
-                recs.push({
-                    name: "Revarta",
-                    desc: "Филигранная полировка ваших STAR-историй и STAR-фреймворков для безупречной софт-скилл самопрезентации."
-                });
-            }
-
-            if (isJunior || isStartup) {
-                recs.push({
-                    name: "NoBSResume",
-                    desc: "Абсолютно бесплатный способ мгновенно упаковать ваше резюме под жесткие требования ИИ-парсеров (ATS) вакансий."
-                });
-            }
-
-            // Fallback safety if nothing matched
-            if (recs.length === 0) {
-                recs.push({
-                    name: "Fluxx.ru",
-                    desc: "Качественная универсальная тренировка продуктовых кейсов и метрик."
-                });
-                recs.push({
-                    name: "PMExercises",
-                    desc: "Глобальные базы вопросов и удобная кросс-партнерская практика."
-                });
-            }
-
-            // Render recommendation cards
-            let recsHtml = `<h4 class="text-xs font-black text-emerald-800 uppercase tracking-wider mb-3">ВАМ ПОДОЙДУТ:</h4>`;
-            recs.forEach(rec => {
-                recsHtml += `
-                    <div class="p-4 bg-emerald-50/50 border border-emerald-100 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                        <div class="text-xs space-y-0.5">
-                            <span class="font-black text-emerald-950 block text-sm">${rec.name}</span>
-                            <span class="text-slate-600 font-medium">${rec.desc}</span>
-                        </div>
-                        <button onclick="scrollToSection('sec-matrix')" class="text-[10px] bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 px-3 rounded-lg transition-colors whitespace-nowrap">Посмотреть тарифы</button>
-                    </div>
-                `;
-            });
-
-            document.getElementById('calc-recommendations-list').innerHTML = recsHtml;
-            calcNextStep(4);
-        }
-
-        function resetCalculator() {
-            // Uncheck all checkboxes
-            document.querySelectorAll('#calc-company-options input[type="checkbox"]').forEach(el => el.checked = false);
-            document.querySelectorAll('#calc-grade-options input[type="checkbox"]').forEach(el => el.checked = false);
-            calcNextStep(1);
-        }
-
-        // Initialize CORE data layers on DOM Ready
-        window.onload = () => {
-            renderMatrixTable();
-            initCharts();
-        };
+        window.onload = renderMatrix;
     </script>
 </body>
 </html>
