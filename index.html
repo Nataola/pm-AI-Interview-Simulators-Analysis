@@ -24,7 +24,6 @@
             transition: all 0.2s ease;
         }
         
-        /* Стили для выбранных карточек в мастере */
         .checkbox-card:checked + label {
             border-color: #000000;
             box-shadow: 4px 4px 0px 0px #000000;
@@ -37,7 +36,7 @@
             background-color: #f3f4f6;
         }
 
-        /* Sticky Table Logic */
+        /* ИДЕАЛЬНЫЙ STICKY SCROLL ДЛЯ ТАБЛИЦЫ */
         .table-container { 
             max-height: 75vh; 
             overflow: auto; 
@@ -63,21 +62,27 @@
             z-index: 20; 
             padding: 16px;
             font-weight: 700;
+            border-bottom: 2px solid #000;
         }
         
-        tbody td:first-child, thead th:first-child { 
-            position: sticky; 
-            left: 0; 
-            background-color: #f9fafb; 
-            z-index: 10; 
-            border-right: 2px solid #000; 
-            font-weight: 600;
-        }
-        
+        /* Верхний левый угол */
         thead th:first-child { 
+            position: sticky;
+            left: 0;
             z-index: 30; 
             background-color: #111827;
             color: #ffffff;
+            border-right: 2px solid #000;
+        }
+
+        /* Первый столбец (Сервисы) */
+        tbody td:first-child { 
+            position: sticky; 
+            left: 0; 
+            background-color: #ffffff; 
+            z-index: 10; 
+            border-right: 2px solid #000; 
+            font-weight: 600;
         }
 
         tbody td {
@@ -85,18 +90,25 @@
             padding: 12px 16px;
         }
 
-        /* ИСПРАВЛЕНИЕ #3: Контрастный фон для категорий */
+        /* Разделители категорий (Темный фон) */
         .category-row td {
             background-color: #111827 !important;
-            color: #ffffff !important;
+            padding: 0 !important; /* Убираем стандартный паддинг */
+            border-bottom: none;
+            z-index: 5;
+        }
+        
+        /* Внутренний контейнер для текста категории, который "липнет" к левому краю */
+        .category-sticky-text {
+            position: sticky;
+            left: 0;
+            display: inline-block;
+            color: #ffffff;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
             font-size: 0.85rem;
-            position: sticky;
-            left: 0;
-            z-index: 15;
-            border-bottom: none;
+            padding: 12px 16px;
         }
 
         /* Wizard Logic */
@@ -108,94 +120,124 @@
         .table-container::-webkit-scrollbar { width: 8px; height: 8px; }
         .table-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 8px; }
         .table-container::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 8px; }
-        .table-container::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+        .table-container::-webkit-scrollbar-thumb:hover { background: #111827; }
+
+        /* Social Share Hover */
+        .share-btn { transition: all 0.2s; }
+        .share-btn:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <main class="max-w-[1400px] mx-auto space-y-12">
-        <header class="border-b-2 border-black pb-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-3xl font-black mb-1 flex items-center gap-2">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    PM/PMM Тренажеры
-                </h1>
-                <p class="text-gray-500 font-medium">Независимый анализ ИИ-симуляторов для продуктовых ролей</p>
+        <!-- HEADER & LANGUAGE TOGGLE -->
+        <header class="border-b-2 border-black pb-8">
+            <div class="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-8">
+                <div>
+                    <h1 class="text-4xl font-black mb-2 flex items-center gap-3">
+                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        <span id="t-main-title">PM/PMM Тренажеры</span>
+                    </h1>
+                    <p class="text-gray-500 font-medium text-lg" id="t-main-subtitle">Независимый анализ ИИ-симуляторов для продуктовых ролей</p>
+                </div>
+                
+                <!-- Вкладка переключения языка -->
+                <div class="flex bg-gray-100 p-1 rounded-xl border-2 border-black shadow-[2px_2px_0_0_#000]">
+                    <button onclick="setLang('ru')" id="btn-ru" class="px-4 py-2 font-bold rounded-lg transition-all bg-black text-white">RU</button>
+                    <button onclick="setLang('en')" id="btn-en" class="px-4 py-2 font-bold rounded-lg transition-all text-gray-500 hover:text-black">EN</button>
+                </div>
+            </div>
+
+            <!-- БЛОК "О СОЗДАТЕЛЕ" (Лид-магнит) -->
+            <div class="bg-gray-50 border-2 border-black rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-[6px_6px_0_0_#000]">
+                <div class="w-20 h-20 bg-black rounded-full flex-shrink-0 flex items-center justify-center text-white text-3xl font-black">
+                    👋
+                </div>
+                <div class="flex-grow text-center md:text-left">
+                    <h2 class="text-2xl font-black mb-2" id="t-intro-title">Привет, я Наталия!</h2>
+                    <p class="text-gray-700 text-lg mb-4" id="t-intro-text">
+                        Я собрала этот материал, чтобы помочь продактам готовиться к собеседованиям. Прямо сейчас я рассматриваю новые карьерные возможности. Если у вас есть вакансия, идея или интересный проект — давайте пообщаемся!
+                    </p>
+                    <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                        <a href="#" target="_blank" class="flex items-center gap-2 bg-[#0A66C2] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[#004182] transition-colors border-2 border-transparent">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                            LinkedIn
+                        </a>
+                        <a href="#" target="_blank" class="flex items-center gap-2 bg-[#229ED9] text-white px-5 py-2.5 rounded-lg font-bold hover:bg-[#1A81B0] transition-colors border-2 border-transparent">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                            Telegram
+                        </a>
+                    </div>
+                </div>
             </div>
         </header>
 
         <!-- КАЛЬКУЛЯТОР (WIZARD) -->
         <section class="notion-card p-6 md:p-8">
-            <h2 class="text-2xl font-black mb-8 border-b-2 border-black pb-4">Индивидуальный подбор тренажера</h2>
+            <h2 class="text-2xl font-black mb-8 border-b-2 border-black pb-4" id="t-wizard-title">Индивидуальный подбор тренажера</h2>
             
             <div id="wizard-container" class="max-w-4xl mx-auto">
-                
                 <!-- Шаг 1: Компании -->
                 <div id="step-1" class="wizard-step active">
                     <div class="mb-6 flex items-center gap-3">
                         <span class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">1</span>
-                        <h3 class="text-xl font-bold">Выберите таргетные компании (не больше 2):</h3>
+                        <h3 class="text-xl font-bold" id="t-step1-title">Выберите таргетные компании (не больше 2):</h3>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="relative">
                             <input type="checkbox" id="c1" class="hidden checkbox-card step-1-cb" value="faang">
                             <label for="c1" class="block p-5 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all hover:bg-gray-50">
-                                <div class="font-bold text-lg">FAANG / Big Tech (США/ЕС)</div>
-                                <div class="text-sm text-gray-500 mt-1">Жесткие фреймворки, глубокий System Design</div>
+                                <div class="font-bold text-lg">FAANG / Big Tech</div>
                             </label>
                         </div>
                         <div class="relative">
                             <input type="checkbox" id="c2" class="hidden checkbox-card step-1-cb" value="startups">
                             <label for="c2" class="block p-5 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all hover:bg-gray-50">
-                                <div class="font-bold text-lg">Ранние и средние стартапы</div>
-                                <div class="text-sm text-gray-500 mt-1">Широкий профиль, гибкость, Execution</div>
+                                <div class="font-bold text-lg" id="t-startups">Стартапы</div>
                             </label>
                         </div>
-                        <div class="relative">
+                        <div class="relative" id="opt-ru">
+                            <!-- Скрывается в EN версии -->
                             <input type="checkbox" id="c3" class="hidden checkbox-card step-1-cb" value="ru">
                             <label for="c3" class="block p-5 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all hover:bg-gray-50">
                                 <div class="font-bold text-lg">Российские BigTech</div>
-                                <div class="text-sm text-gray-500 mt-1">Яндекс, Ozon, Авито. Фокус на Product Sense</div>
                             </label>
                         </div>
                         <div class="relative">
                             <input type="checkbox" id="c4" class="hidden checkbox-card step-1-cb" value="global">
                             <label for="c4" class="block p-5 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all hover:bg-gray-50">
-                                <div class="font-bold text-lg">Международные компании (Global)</div>
-                                <div class="text-sm text-gray-500 mt-1">Релокация, культурный фит, адаптация резюме</div>
+                                <div class="font-bold text-lg" id="t-global">Международные компании (Global)</div>
                             </label>
                         </div>
                     </div>
                     <div class="mt-8 flex justify-end">
-                        <button onclick="nextStep(2, 'step-1-cb')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition shadow-[3px_3px_0_0_#000]">Далее &rarr;</button>
+                        <button onclick="nextStep(2, 'step-1-cb')" class="bg-black text-white px-8 py-3 rounded-xl font-bold transition shadow-[3px_3px_0_0_#000] hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]" id="t-btn-next1">Далее &rarr;</button>
                     </div>
                 </div>
 
-                <!-- Шаг 2: Роли PM/PMM (НОВОЕ ИСПРАВЛЕНИЕ) -->
+                <!-- Шаг 2: Роль -->
                 <div id="step-2" class="wizard-step">
                     <div class="mb-6 flex items-center gap-3">
                         <span class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">2</span>
-                        <h3 class="text-xl font-bold">Роли для подготовки (выберите):</h3>
+                        <h3 class="text-xl font-bold" id="t-step2-title">Роль (выберите):</h3>
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-2 gap-4">
                         <div class="relative">
-                            <input type="checkbox" id="role1" class="hidden checkbox-card step-2-cb" value="pm">
-                            <label for="role1" class="block text-center p-6 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all hover:bg-gray-50">
-                                <div class="font-bold text-xl">Product Manager (PM)</div>
-                                <div class="text-sm text-gray-500 mt-1">Продукт, метрики, архитектура</div>
+                            <input type="radio" name="role" id="role1" class="hidden checkbox-card step-2-cb" value="pm" checked>
+                            <label for="role1" class="block text-center p-5 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all font-bold text-lg">
+                                Product Manager (PM)
                             </label>
                         </div>
                         <div class="relative">
-                            <input type="checkbox" id="role2" class="hidden checkbox-card step-2-cb" value="pmm">
-                            <label for="role2" class="block text-center p-6 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all hover:bg-gray-50">
-                                <div class="font-bold text-xl">Product Marketing (PMM)</div>
-                                <div class="text-sm text-gray-500 mt-1">Позиционирование, GTM, коммуникация</div>
+                            <input type="radio" name="role" id="role2" class="hidden checkbox-card step-2-cb" value="pmm">
+                            <label for="role2" class="block text-center p-5 rounded-2xl border-2 border-gray-200 cursor-pointer transition-all font-bold text-lg">
+                                Product Marketing (PMM)
                             </label>
                         </div>
                     </div>
                     <div class="mt-8 flex justify-between">
-                        <button onclick="prevStep(1)" class="px-6 py-3 font-bold text-gray-500 hover:text-black transition">Назад</button>
-                        <button onclick="nextStep(3, 'step-2-cb')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition shadow-[3px_3px_0_0_#000]">Далее &rarr;</button>
+                        <button onclick="prevStep(1)" class="px-6 py-3 font-bold text-gray-500 hover:text-black transition" id="t-btn-back1">Назад</button>
+                        <button onclick="nextStep(3, 'step-2-cb')" class="bg-black text-white px-8 py-3 rounded-xl font-bold transition shadow-[3px_3px_0_0_#000] hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]" id="t-btn-next2">Далее &rarr;</button>
                     </div>
                 </div>
 
@@ -203,7 +245,7 @@
                 <div id="step-3" class="wizard-step">
                     <div class="mb-6 flex items-center gap-3">
                         <span class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">3</span>
-                        <h3 class="text-xl font-bold">Уровень роли (не больше 2):</h3>
+                        <h3 class="text-xl font-bold" id="t-step3-title">Уровень роли (не больше 2):</h3>
                     </div>
                     <div class="grid grid-cols-2 gap-4">
                         <div class="relative">
@@ -224,8 +266,8 @@
                         </div>
                     </div>
                     <div class="mt-8 flex justify-between">
-                        <button onclick="prevStep(2)" class="px-6 py-3 font-bold text-gray-500 hover:text-black transition">Назад</button>
-                        <button onclick="nextStep(4, 'step-3-cb')" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition shadow-[3px_3px_0_0_#000]">Далее &rarr;</button>
+                        <button onclick="prevStep(2)" class="px-6 py-3 font-bold text-gray-500 hover:text-black transition" id="t-btn-back2">Назад</button>
+                        <button onclick="nextStep(4, 'step-3-cb')" class="bg-black text-white px-8 py-3 rounded-xl font-bold transition shadow-[3px_3px_0_0_#000] hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]" id="t-btn-next3">Далее &rarr;</button>
                     </div>
                 </div>
 
@@ -233,43 +275,33 @@
                 <div id="step-4" class="wizard-step">
                     <div class="mb-6 flex items-center gap-3">
                         <span class="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center font-bold text-sm">4</span>
-                        <h3 class="text-xl font-bold">Фокус подготовки (выберите необходимое):</h3>
+                        <h3 class="text-xl font-bold" id="t-step4-title">Фокус подготовки:</h3>
                     </div>
                     <div class="space-y-3">
                         <div class="relative">
                             <input type="checkbox" id="f1" class="hidden checkbox-card step-4-cb" value="system">
-                            <label for="f1" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all flex justify-between">
-                                <span>Системный дизайн и Архитектура</span><span class="text-gray-400">Hard skills</span>
-                            </label>
+                            <label for="f1" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all" id="t-focus-sys">Системный дизайн и Архитектура</label>
                         </div>
                         <div class="relative">
                             <input type="checkbox" id="f2" class="hidden checkbox-card step-4-cb" value="metrics">
-                            <label for="f2" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all flex justify-between">
-                                <span>Продуктовые метрики и Аналитика</span><span class="text-gray-400">Hard skills</span>
-                            </label>
+                            <label for="f2" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all" id="t-focus-met">Продуктовые метрики и Аналитика</label>
                         </div>
                         <div class="relative">
                             <input type="checkbox" id="f3" class="hidden checkbox-card step-4-cb" value="behavioral">
-                            <label for="f3" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all flex justify-between">
-                                <span>Behavioral / Софты (STAR, Лидерство)</span><span class="text-gray-400">Soft skills</span>
-                            </label>
+                            <label for="f3" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all" id="t-focus-beh">Behavioral / Софты (STAR)</label>
                         </div>
                         <div class="relative">
                             <input type="checkbox" id="f4" class="hidden checkbox-card step-4-cb" value="cv">
-                            <label for="f4" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all flex justify-between">
-                                <span>Процесс поиска и резюме</span><span class="text-gray-400">Career</span>
-                            </label>
+                            <label for="f4" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all" id="t-focus-cv">Процесс поиска и резюме</label>
                         </div>
                         <div class="relative mt-2">
                             <input type="checkbox" id="f5" class="hidden checkbox-card step-4-cb" value="all" onchange="toggleAllFocus(this)">
-                            <label for="f5" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all bg-gray-50">
-                                Не уверен, нужно тренировать всё
-                            </label>
+                            <label for="f5" class="block p-4 rounded-2xl border-2 border-gray-200 cursor-pointer font-bold transition-all bg-gray-50" id="t-focus-all">Не уверен, нужно тренировать всё</label>
                         </div>
                     </div>
                     <div class="mt-8 flex justify-between">
-                        <button onclick="prevStep(3)" class="px-6 py-3 font-bold text-gray-500 hover:text-black transition">Назад</button>
-                        <button onclick="calculateResults()" class="bg-black text-white px-8 py-3 rounded-xl font-bold hover:bg-gray-800 transition shadow-[3px_3px_0_0_#000]">Подобрать тренажер</button>
+                        <button onclick="prevStep(3)" class="px-6 py-3 font-bold text-gray-500 hover:text-black transition" id="t-btn-back3">Назад</button>
+                        <button onclick="calculateResults()" class="bg-black text-white px-8 py-3 rounded-xl font-bold transition shadow-[3px_3px_0_0_#000] hover:-translate-y-1 hover:shadow-[4px_4px_0_0_#000]" id="t-btn-calc">Подобрать тренажер</button>
                     </div>
                 </div>
 
@@ -277,13 +309,13 @@
                 <div id="step-5" class="wizard-step">
                     <div class="mb-6 flex items-center gap-3">
                         <svg class="w-8 h-8 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        <h3 class="text-2xl font-black">ВАМ ПОДОЙДУТ:</h3>
+                        <h3 class="text-2xl font-black" id="t-result-title">ВАМ ПОДОЙДУТ:</h3>
                     </div>
                     <div id="results-container" class="space-y-4 mb-8">
                         <!-- JS вставит результаты -->
                     </div>
                     <div class="flex justify-center border-t-2 border-black pt-6">
-                        <button onclick="resetWizard()" class="px-6 py-3 font-bold border-2 border-black rounded-xl hover:bg-gray-100 transition shadow-[2px_2px_0_0_#000]">Начать заново</button>
+                        <button onclick="resetWizard()" class="px-6 py-3 font-bold border-2 border-black rounded-xl hover:bg-gray-100 transition shadow-[2px_2px_0_0_#000]" id="t-btn-reset">Начать заново</button>
                     </div>
                 </div>
 
@@ -292,7 +324,7 @@
 
         <!-- МАТРИЦА СРАВНЕНИЯ -->
         <section>
-            <h2 class="text-2xl font-black mb-6 flex items-center gap-2">
+            <h2 class="text-2xl font-black mb-6 flex items-center gap-2" id="t-table-title">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
                 Матрица сравнения платформ
             </h2>
@@ -308,148 +340,332 @@
             </div>
         </section>
 
-        <!-- ИТОГОВОЕ РЕЗЮМЕ (НОВЫЙ БЛОК) -->
-        <section class="mt-16 mb-16">
-            <h2 class="text-2xl font-black mb-6">Подробное резюме сервисов</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Fluxx -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">Fluxx.ru</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Золотой стандарт для подготовки к Яндексу, Ozon и Авито. Лучше всего качает Product Sense и метрики под суровые реалии российского бизнеса.</p>
-                </div>
-                <!-- Teal -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">Teal</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Мощнейшая CRM для зарубежного поиска. Помогает адаптировать резюме под вакансию и собирать STAR-истории. Идеально для релокации.</p>
-                </div>
-                <!-- Hello Interview -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">Hello Interview</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Специализируется на сложном системном дизайне. Если вас ждет технический раунд в FAANG (Meta, Google) — это лучший выбор.</p>
-                </div>
-                <!-- Revarta -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">Revarta</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Мастер поведенческих интервью. Умеет брать ваш сбивчивый рассказ и ИИ-переписывать его в идеальную структуру STAR без "воды".</p>
-                </div>
-                <!-- PMExercises -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">PMExercises</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Огромная библиотека реальных вопросов из сотен компаний. Отлично подходит для «набивания руки» на метриках и базовых кейсах.</p>
-                </div>
-                <!-- Sandbox4PM -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">Sandbox4PM</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Создан для стресс-тестирования опытных продактов (Middle/Senior). Жесткие таймеры и каверзные ИИ-интервьюеры.</p>
-                </div>
-                <!-- AceRound -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">AceRound</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Современный Live-copilot. Анализирует вашу речь прямо во время звонка и подкидывает подсказки. Фокус на зарубежные стартапы.</p>
-                </div>
-                <!-- NoBSResume -->
-                <div class="border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:translate-y-1 hover:shadow-[2px_2px_0_0_#000] transition-all">
-                    <h3 class="font-black text-lg mb-2">NoBSResume</h3>
-                    <p class="text-sm text-gray-700 leading-relaxed">Супер-быстрый аудит и правка резюме. Подгоняет ваш опыт под ключевые слова из Job Description. Незаменимо для джунов и мидлов.</p>
-                </div>
+        <!-- ИТОГОВЫЕ КАРТОЧКИ (КЛИКАБЕЛЬНЫЕ) -->
+        <section class="mt-16 mb-8">
+            <h2 class="text-2xl font-black mb-6" id="t-cards-title">Подробное резюме сервисов (Ссылки на сайты)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="cards-container">
+                <!-- JS сгенерирует карточки -->
             </div>
         </section>
+
+        <!-- FOOTER: SHARE & LEAD MAGNETS -->
+        <footer class="border-t-2 border-black pt-12 pb-16">
+            <div class="text-center mb-12">
+                <h3 class="text-2xl font-black mb-6" id="t-share-title">Понравился гайд? Поделись с друзьями!</h3>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <!-- Telegram -->
+                    <a href="https://t.me/share/url?url=YOUR_URL_HERE&text=Отличный гайд по ИИ-тренажерам для PM" target="_blank" class="share-btn flex items-center justify-center w-12 h-12 bg-[#229ED9] text-white rounded-full shadow-[3px_3px_0_0_#000] border-2 border-black">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.892-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                    </a>
+                    <!-- LinkedIn -->
+                    <a href="https://www.linkedin.com/shareArticle?mini=true&url=YOUR_URL_HERE&title=PM Interview Simulators" target="_blank" class="share-btn flex items-center justify-center w-12 h-12 bg-[#0A66C2] text-white rounded-full shadow-[3px_3px_0_0_#000] border-2 border-black">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                    </a>
+                    <!-- Facebook -->
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=YOUR_URL_HERE" target="_blank" class="share-btn flex items-center justify-center w-12 h-12 bg-[#1877F2] text-white rounded-full shadow-[3px_3px_0_0_#000] border-2 border-black">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    </a>
+                    <!-- Copy Link -->
+                    <button onclick="navigator.clipboard.writeText(window.location.href); alert(currentLang==='ru'?'Ссылка скопирована!':'Link copied!');" class="share-btn flex items-center justify-center w-12 h-12 bg-black text-white rounded-full shadow-[3px_3px_0_0_#000] border-2 border-black">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- LEAD MAGNETS GRID -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Promo 1 -->
+                <a href="#" class="block p-6 rounded-2xl border-2 border-black bg-yellow-50 hover:bg-yellow-100 transition-colors shadow-[4px_4px_0_0_#000]">
+                    <div class="text-3xl mb-4">📚</div>
+                    <h4 class="text-xl font-black mb-2" id="t-lm1-title">Библиотека промптов</h4>
+                    <p class="text-sm font-bold text-gray-600" id="t-lm1-desc">[Скоро наполню]</p>
+                </a>
+                <!-- Promo 2 -->
+                <a href="#" class="block p-6 rounded-2xl border-2 border-black bg-blue-50 hover:bg-blue-100 transition-colors shadow-[4px_4px_0_0_#000]">
+                    <div class="text-3xl mb-4">🗺️</div>
+                    <h4 class="text-xl font-black mb-2" id="t-lm2-title">Скачать Чек-лист подготовки</h4>
+                    <p class="text-sm font-bold text-gray-600">PDF Guide</p>
+                </a>
+                <!-- Promo 3 -->
+                <a href="#" class="block p-6 rounded-2xl border-2 border-black bg-pink-50 hover:bg-pink-100 transition-colors shadow-[4px_4px_0_0_#000]">
+                    <div class="text-3xl mb-4">⚠️</div>
+                    <h4 class="text-xl font-black mb-2" id="t-lm3-title">Частые ошибки на собесах</h4>
+                    <p class="text-sm font-bold text-gray-600">Cheat Sheet</p>
+                </a>
+            </div>
+        </footer>
 
     </main>
 
     <script>
-        // БАЗА ДАННЫХ ИНСТРУМЕНТОВ С ЖЕСТКОЙ ПРИВЯЗКОЙ ТЕГОВ
-        const tools = [
-            { id: "fluxx", name: "Fluxx.ru", tags: ["ru", "pm", "pmm", "middle", "senior", "system", "metrics", "behavioral", "all"], desc: "Идеален для глубокого погружения в специфику российского рынка (Яндекс, Авито, Ozon)." },
-            { id: "teal", name: "Teal", tags: ["global", "startups", "pm", "pmm", "junior", "middle", "cv", "behavioral", "all"], desc: "Лучшая связка трекера вакансий и подготовки к зарубежной удаленке." },
-            { id: "hello", name: "Hello Interview", tags: ["faang", "pm", "senior", "lead", "system", "metrics", "all"], desc: "Бескомпромиссный лидер для отработки сложного системного дизайна под стандарты FAANG." },
-            { id: "revarta", name: "Revarta", tags: ["global", "startups", "ru", "pm", "pmm", "middle", "senior", "behavioral", "cv", "all"], desc: "Идеально вычищает «воду» из STAR-историй, незаменим для PMM и софт-скиллов." },
-            { id: "pmex", name: "PMExercises", tags: ["faang", "global", "pm", "junior", "middle", "metrics", "system", "all"], desc: "Огромная база реальных вопросов для набивания руки на метриках." },
-            { id: "sandbox", name: "Sandbox4PM", tags: ["faang", "pm", "middle", "senior", "metrics", "behavioral", "all"], desc: "Жесткий стресс-симулятор с таймингами для опытных кандидатов." },
-            { id: "aceround", name: "AceRound", tags: ["global", "startups", "pm", "middle", "behavioral", "cv", "all"], desc: "Лайв-ассистент, помогающий на реальных звонках с зарубежными компаниями." },
-            { id: "nobs", name: "NoBSResume", tags: ["global", "startups", "pm", "pmm", "junior", "middle", "cv", "all"], desc: "Быстрый матчинг резюме под зарубежные ATS-системы." }
+        // --- ДАННЫЕ И ТЕКСТЫ ---
+        let currentLang = 'ru';
+
+        // Статичные тексты для интерфейса
+        const uiTexts = {
+            ru: {
+                "main-title": "PM/PMM Тренажеры",
+                "main-subtitle": "Независимый анализ ИИ-симуляторов для продуктовых ролей",
+                "intro-title": "Привет, я Наталия!",
+                "intro-text": "Я собрала этот материал, чтобы помочь продактам готовиться к собеседованиям. Прямо сейчас я рассматриваю новые карьерные возможности. Если у вас есть вакансия, идея или интересный проект — давайте пообщаемся!",
+                "wizard-title": "Индивидуальный подбор тренажера",
+                "step1-title": "Выберите таргетные компании (не больше 2):",
+                "startups": "Стартапы",
+                "global": "Международные компании (Global)",
+                "btn-next1": "Далее &rarr;",
+                "step2-title": "Роль (выберите):",
+                "btn-back1": "Назад",
+                "btn-next2": "Далее &rarr;",
+                "step3-title": "Уровень роли (не больше 2):",
+                "btn-back2": "Назад",
+                "btn-next3": "Далее &rarr;",
+                "step4-title": "Фокус подготовки:",
+                "focus-sys": "Системный дизайн и Архитектура",
+                "focus-met": "Продуктовые метрики и Аналитика",
+                "focus-beh": "Behavioral / Софты (STAR)",
+                "focus-cv": "Процесс поиска и резюме",
+                "focus-all": "Не уверен, нужно тренировать всё",
+                "btn-back3": "Назад",
+                "btn-calc": "Подобрать тренажер",
+                "result-title": "ВАМ ПОДОЙДУТ:",
+                "btn-reset": "Начать заново",
+                "table-title": "Матрица сравнения платформ",
+                "cards-title": "Подробное резюме сервисов (Ссылки на сайты)",
+                "share-title": "Понравился гайд? Поделись с друзьями!",
+                "lm1-title": "Библиотека промптов",
+                "lm1-desc": "[Скоро наполню]",
+                "lm2-title": "Скачать Чек-лист подготовки",
+                "lm3-title": "Частые ошибки на собесах"
+            },
+            en: {
+                "main-title": "PM/PMM AI Simulators",
+                "main-subtitle": "Independent Market Analysis of AI Interview Tools",
+                "intro-title": "Hi, I'm Natalia!",
+                "intro-text": "I put together this guide to help PMs prepare for interviews. Right now, I'm open to new career opportunities. If you have an open role, an idea, or an interesting project — let's connect!",
+                "wizard-title": "Custom Simulator Matcher",
+                "step1-title": "Select target companies (max 2):",
+                "startups": "Startups",
+                "global": "Global & Remote Companies",
+                "btn-next1": "Next &rarr;",
+                "step2-title": "Select your role:",
+                "btn-back1": "Back",
+                "btn-next2": "Next &rarr;",
+                "step3-title": "Seniority Level (max 2):",
+                "btn-back2": "Back",
+                "btn-next3": "Next &rarr;",
+                "step4-title": "Interview Focus:",
+                "focus-sys": "System Design & Architecture",
+                "focus-met": "Product Metrics & Analytics",
+                "focus-beh": "Behavioral / Soft Skills (STAR)",
+                "focus-cv": "Job Search & Resume",
+                "focus-all": "Not sure, I need to train everything",
+                "btn-back3": "Back",
+                "btn-calc": "Find My Tool",
+                "result-title": "RECOMMENDED FOR YOU:",
+                "btn-reset": "Start Over",
+                "table-title": "Platform Comparison Matrix",
+                "cards-title": "Detailed Summary (Click to visit website)",
+                "share-title": "Liked the guide? Share it with friends!",
+                "lm1-title": "Prompt Library",
+                "lm1-desc": "[Coming soon]",
+                "lm2-title": "Download Preparation RoadMap",
+                "lm3-title": "Common Interview Mistakes"
+            }
+        };
+
+        // База сервисов с мультиязычными описаниями и URL
+        const allTools = [
+            { id: "fluxx", url: "https://www.fluxx.ru", name: "Fluxx.ru", tags: ["ru", "pm", "pmm", "middle", "senior", "system", "metrics", "behavioral", "all"], 
+              desc: { ru: "Идеален для глубокого погружения в специфику российского рынка (Яндекс, Авито, Ozon).", en: "Ideal for the Russian IT market specificities (Yandex, Avito, Ozon)." } },
+            { id: "teal", url: "https://www.tealhq.com", name: "Teal", tags: ["global", "startups", "pm", "pmm", "junior", "middle", "cv", "behavioral", "all"], 
+              desc: { ru: "Лучшая связка трекера вакансий и подготовки к зарубежной удаленке.", en: "The best combination of a job tracker and global remote prep CRM." } },
+            { id: "hello", url: "https://www.hellointerview.com", name: "Hello Interview", tags: ["faang", "pm", "senior", "lead", "system", "metrics", "all"], 
+              desc: { ru: "Бескомпромиссный лидер для отработки сложного системного дизайна под стандарты FAANG.", en: "Uncompromising leader for complex FAANG-level System Design practice." } },
+            { id: "revarta", url: "https://www.revarta.com", name: "Revarta", tags: ["global", "startups", "ru", "pm", "pmm", "middle", "senior", "behavioral", "cv", "all"], 
+              desc: { ru: "Идеально вычищает «воду» из STAR-историй, незаменим для PMM и софт-скиллов.", en: "Perfectly cleans the 'fluff' from STAR stories, essential for PMM and soft skills." } },
+            { id: "pmex", url: "https://www.productmanagementexercises.com", name: "PMExercises", tags: ["faang", "global", "pm", "junior", "middle", "metrics", "system", "all"], 
+              desc: { ru: "Огромная база реальных вопросов для набивания руки на метриках.", en: "A massive database of real questions for honing product metrics skills." } },
+            { id: "sandbox", url: "https://www.sandbox4pm.com", name: "Sandbox4PM", tags: ["faang", "pm", "middle", "senior", "metrics", "behavioral", "all"], 
+              desc: { ru: "Жесткий стресс-симулятор с таймингами для опытных кандидатов.", en: "Hardcore stress-simulator with strict timings for experienced candidates." } },
+            { id: "aceround", url: "https://www.aceround.com", name: "AceRound", tags: ["global", "startups", "pm", "middle", "behavioral", "cv", "all"], 
+              desc: { ru: "Лайв-ассистент, помогающий на реальных звонках с зарубежными компаниями.", en: "Live-assistant helping you directly during remote interviews via overlay." } },
+            { id: "nobs", url: "https://www.nobsresume.com", name: "NoBSResume", tags: ["global", "startups", "pm", "pmm", "junior", "middle", "cv", "all"], 
+              desc: { ru: "Быстрый матчинг резюме под зарубежные ATS-системы.", en: "Fast resume matching and optimization for global ATS systems." } }
         ];
 
-        // МЕГА-МАТРИЦА (Все данные)
+        // Массив данных таблицы (Мультиязычный)
         const tableData = [
             {
-                category: "Базовая информация",
+                category: { ru: "БАЗОВАЯ ИНФОРМАЦИЯ", en: "BASIC INFORMATION" },
                 rows: [
-                    { id: "summary", label: "Саммари", type: "text", data: { fluxx: "Идеален для РФ рынка", teal: "Трекер поиска и CRM", hello: "Лучший для системного дизайна", revarta: "Мастер STAR и софтов", pmex: "Огромная база вопросов", sandbox: "Стресс-тестирование", aceround: "Живой помощник", nobs: "Быстрая правка резюме" } },
-                    { id: "pm", label: "Product Manager (PM)", type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
-                    { id: "pmm", label: "Product Marketing (PMM)", type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true } }
+                    { id: "summary", label: { ru: "Саммари", en: "Summary" }, type: "text", 
+                      data: { fluxx: { ru: "Идеален для РФ рынка", en: "Ideal for RU market" }, teal: { ru: "Трекер поиска и CRM", en: "Job tracker & CRM" }, hello: { ru: "Лучший для системного дизайна", en: "Best for System Design" }, revarta: { ru: "Мастер STAR и софтов", en: "Master of STAR & Soft skills" }, pmex: { ru: "Огромная база вопросов", en: "Huge question bank" }, sandbox: { ru: "Стресс-тестирование", en: "Stress-testing" }, aceround: { ru: "Живой помощник", en: "Live copilot" }, nobs: { ru: "Быстрая правка резюме", en: "Fast resume fixes" } } },
+                    { id: "pm", label: { ru: "Product Manager (PM)", en: "Product Manager (PM)" }, type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
+                    { id: "pmm", label: { ru: "Product Marketing (PMM)", en: "Product Marketing (PMM)" }, type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true } }
                 ]
             },
             {
-                category: "Цены (Индивидуальный доступ)",
+                category: { ru: "ЦЕНЫ (ИНДИВИДУАЛЬНЫЙ ДОСТУП)", en: "PRICING (INDIVIDUAL)" },
                 rows: [
-                    { id: "p1", label: "1 месяц", type: "text", data: { fluxx: "$30", teal: "Free / $39", hello: "$49", revarta: "$40", pmex: "$20", sandbox: "$29", aceround: "$40", nobs: "$15" } },
-                    { id: "p3", label: "3 месяца", type: "text", data: { fluxx: "$80", teal: "$90", hello: "$120", revarta: "$100", pmex: "$50", sandbox: "$75", aceround: "$100", nobs: "$40" } },
-                    { id: "p6", label: "6 месяцев", type: "text", data: { fluxx: "$150", teal: "$150", hello: "$190", revarta: "$180", pmex: "$90", sandbox: "$140", aceround: "$180", nobs: "$70" } }
+                    { id: "p1", label: { ru: "1 месяц", en: "1 month" }, type: "text", data: { fluxx: { ru:"$30", en:"$30"}, teal: {ru:"Free / $39",en:"Free / $39"}, hello: {ru:"$49",en:"$49"}, revarta: {ru:"$40",en:"$40"}, pmex: {ru:"$20",en:"$20"}, sandbox: {ru:"$29",en:"$29"}, aceround: {ru:"$40",en:"$40"}, nobs: {ru:"$15",en:"$15"} } },
+                    { id: "p3", label: { ru: "3 месяца", en: "3 months" }, type: "text", data: { fluxx: {ru:"$80",en:"$80"}, teal: {ru:"$90",en:"$90"}, hello: {ru:"$120",en:"$120"}, revarta: {ru:"$100",en:"$100"}, pmex: {ru:"$50",en:"$50"}, sandbox: {ru:"$75",en:"$75"}, aceround: {ru:"$100",en:"$100"}, nobs: {ru:"$40",en:"$40"} } },
+                    { id: "p6", label: { ru: "6 месяцев", en: "6 months" }, type: "text", data: { fluxx: {ru:"$150",en:"$150"}, teal: {ru:"$150",en:"$150"}, hello: {ru:"$190",en:"$190"}, revarta: {ru:"$180",en:"$180"}, pmex: {ru:"$90",en:"$90"}, sandbox: {ru:"$140",en:"$140"}, aceround: {ru:"$180",en:"$180"}, nobs: {ru:"$70",en:"$70"} } }
                 ]
             },
             {
-                category: "Функциональные возможности (Фичи)",
+                category: { ru: "ФУНКЦИОНАЛЬНЫЕ ВОЗМОЖНОСТИ (ФИЧИ)", en: "FEATURES & CAPABILITIES" },
                 rows: [
-                    { id: "f_voice", label: "Голосовой ввод", type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: false, sandbox: true, aceround: true, nobs: false } },
-                    { id: "f_pace", label: "Анализ темпа речи", type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: true, aceround: true, nobs: false } },
-                    { id: "f_filler", label: "Слова-паразиты", type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "f_frame", label: "Разбор по фреймворкам", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: false, nobs: false } },
-                    { id: "f_holes", label: "Поиск логических дыр", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: false, aceround: false, nobs: false } },
-                    { id: "f_rewrite", label: "AI-переписывание ответов", type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true } },
-                    { id: "f_wb", label: "Whiteboard (Доска)", type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
-                    { id: "f_ava", label: "ИИ-аватары / Видео", type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "f_stress", label: "Стресс-режим", type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } },
-                    { id: "f_copilot", label: "Лайв-подсказчик", type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "f_crm", label: "CRM вакансий", type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } }
+                    { id: "f_voice", label: { ru: "Голосовой ввод", en: "Voice Input" }, type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: false, sandbox: true, aceround: true, nobs: false } },
+                    { id: "f_pace", label: { ru: "Анализ темпа речи", en: "Pacing Analysis" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: true, aceround: true, nobs: false } },
+                    { id: "f_filler", label: { ru: "Слова-паразиты", en: "Filler Words Tracker" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "f_frame", label: { ru: "Разбор по фреймворкам", en: "Framework Analysis" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: false, nobs: false } },
+                    { id: "f_holes", label: { ru: "Поиск логических дыр", en: "Logical Gaps Detection" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: false, aceround: false, nobs: false } },
+                    { id: "f_rewrite", label: { ru: "AI-переписывание ответов", en: "AI Answer Rewrite" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: true } },
+                    { id: "f_wb", label: { ru: "Whiteboard (Доска)", en: "Virtual Whiteboard" }, type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
+                    { id: "f_ava", label: { ru: "AI-аватары / Видео", en: "AI Avatars / Video" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "f_stress", label: { ru: "Стресс-режим", en: "Stress-test Mode" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } },
+                    { id: "f_copilot", label: { ru: "Лайв-подсказчик", en: "Live Overlay Copilot" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "f_crm", label: { ru: "CRM вакансий", en: "Job Tracker CRM" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } }
                 ]
             },
             {
-                category: "Грейды и Уровни",
+                category: { ru: "ГРЕЙДЫ И УРОВНИ", en: "SENIORITY LEVELS" },
                 rows: [
-                    { id: "lvl_intern", label: "Intern / Junior", type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: true } },
-                    { id: "lvl_middle", label: "Middle", type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
-                    { id: "lvl_senior", label: "Senior", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: false, sandbox: true, aceround: false, nobs: false } },
-                    { id: "lvl_lead", label: "Lead / Staff+", type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } }
+                    { id: "lvl_intern", label: { ru: "Intern / Junior", en: "Intern / Junior" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: true } },
+                    { id: "lvl_middle", label: { ru: "Middle", en: "Middle" }, type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
+                    { id: "lvl_senior", label: { ru: "Senior", en: "Senior" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: false, sandbox: true, aceround: false, nobs: false } },
+                    { id: "lvl_lead", label: { ru: "Lead / Staff+", en: "Lead / Staff+" }, type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } }
                 ]
             },
             {
-                category: "Секции интервью",
+                category: { ru: "СЕКЦИИ ИНТЕРВЬЮ", en: "INTERVIEW ROUNDS" },
                 rows: [
-                    { id: "s_case", label: "Case Study", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
-                    { id: "s_met", label: "Metrics", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
-                    { id: "s_ps", label: "Product Sense", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
-                    { id: "s_star", label: "Behavioral (STAR)", type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "s_self", label: "Self-Presentation", type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "s_cult", label: "Cultural Fit", type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "s_sys", label: "System Design", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
-                    { id: "s_gtm", label: "Go-To-Market (GTM)", type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: false } },
-                    { id: "s_exec", label: "Execution & Crisis Mgmt", type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } }
+                    { id: "s_case", label: { ru: "Case Study", en: "Case Study" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
+                    { id: "s_met", label: { ru: "Metrics", en: "Metrics" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
+                    { id: "s_ps", label: { ru: "Product Sense", en: "Product Sense" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
+                    { id: "s_star", label: { ru: "Behavioral (STAR)", en: "Behavioral (STAR)" }, type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "s_self", label: { ru: "Self-Presentation", en: "Self-Presentation" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "s_cult", label: { ru: "Cultural Fit", en: "Cultural Fit" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "s_sys", label: { ru: "System Design", en: "System Design" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
+                    { id: "s_gtm", label: { ru: "Go-To-Market (GTM)", en: "Go-To-Market (GTM)" }, type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: false, nobs: false } },
+                    { id: "s_exec", label: { ru: "Execution & Mgmt", en: "Execution & Mgmt" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } }
                 ]
             },
             {
-                category: "Отзывы (Что хвалят)",
+                category: { ru: "ОТЗЫВЫ: ЧТО НРАВИТСЯ", en: "USER REVIEWS: PROS" },
                 rows: [
-                    { id: "pro1", label: "Плюс 1", type: "text", data: { fluxx: "Отличные кейсы под Яндекс.", teal: "Канбан-доска экономит часы.", hello: "Системный дизайн на высшем уровне.", revarta: "Помогает убрать воду из ответов.", pmex: "Огромная база реальных вопросов.", sandbox: "Готовит к реальности.", aceround: "Помогает не паниковать на созвоне.", nobs: "Сделал резюме за 10 минут." } },
-                    { id: "pro2", label: "Плюс 2", type: "text", data: { fluxx: "Фидбек приземленный, без воды.", teal: "Структурирует процесс поиска.", hello: "ИИ задает наводящие вопросы.", revarta: "Крутой конструктор историй.", pmex: "Много метрик.", sandbox: "Тренирует тайминг.", aceround: "Суфлер работает незаметно.", nobs: "Дешево и сердито." } },
-                    { id: "pro3", label: "Плюс 3", type: "text", data: { fluxx: "Помогло пройти Product Sense.", teal: "Интеграция с LinkedIn.", hello: "Крутой Whiteboard.", revarta: "Детальный разбор STAR.", pmex: "Сообщество моков.", sandbox: "Уникальный формат стресса.", aceround: "Хорошая транскрибация.", nobs: "Точное попадание в вакансию." } }
+                    { id: "pro1", label: { ru: "Позитив 1", en: "Pro 1" }, type: "text", data: { 
+                        fluxx: { ru: "Отличные кейсы под Яндекс.", en: "" }, 
+                        teal: { ru: "Канбан-доска экономит часы.", en: "Kanban board saves hours." }, 
+                        hello: { ru: "Системный дизайн на высшем уровне.", en: "Top tier system design prep." }, 
+                        revarta: { ru: "Помогает убрать воду из ответов.", en: "Helps cut the fluff." }, 
+                        pmex: { ru: "Огромная база реальных вопросов.", en: "Massive database of real questions." }, 
+                        sandbox: { ru: "Готовит к реальности.", en: "Prepares you for harsh reality." }, 
+                        aceround: { ru: "Помогает не паниковать на созвоне.", en: "Keeps you calm during live calls." }, 
+                        nobs: { ru: "Сделал резюме за 10 минут.", en: "Fixed my resume in 10 minutes." } 
+                    } },
+                    { id: "pro2", label: { ru: "Позитив 2", en: "Pro 2" }, type: "text", data: { 
+                        fluxx: { ru: "Фидбек приземленный, без воды.", en: "" }, 
+                        teal: { ru: "Структурирует процесс поиска.", en: "Structures the entire search process." }, 
+                        hello: { ru: "ИИ задает наводящие вопросы.", en: "AI asks great follow-up questions." }, 
+                        revarta: { ru: "Крутой конструктор историй.", en: "Awesome story builder." }, 
+                        pmex: { ru: "Много метрик.", en: "Great metrics practice." }, 
+                        sandbox: { ru: "Тренирует тайминг.", en: "Trains strict timings." }, 
+                        aceround: { ru: "Суфлер работает незаметно.", en: "Prompter works seamlessly." }, 
+                        nobs: { ru: "Дешево и сердито.", en: "Cheap and effective." } 
+                    } },
+                    { id: "pro3", label: { ru: "Позитив 3", en: "Pro 3" }, type: "text", data: { 
+                        fluxx: { ru: "Помогло пройти Product Sense.", en: "" }, 
+                        teal: { ru: "Интеграция с LinkedIn.", en: "LinkedIn extension is amazing." }, 
+                        hello: { ru: "Крутой Whiteboard.", en: "Love the interactive whiteboard." }, 
+                        revarta: { ru: "Детальный разбор STAR.", en: "Detailed STAR breakdown." }, 
+                        pmex: { ru: "Сообщество моков.", en: "Great mock community." }, 
+                        sandbox: { ru: "Уникальный формат стресса.", en: "Unique stress format." }, 
+                        aceround: { ru: "Хорошая транскрибация.", en: "Good live transcription." }, 
+                        nobs: { ru: "Точное попадание в вакансию.", en: "Accurate ATS matching." } 
+                    } }
                 ]
             },
             {
-                category: "Отзывы (Что бесит)",
+                category: { ru: "ОТЗЫВЫ: ЧТО БЕСИТ", en: "USER REVIEWS: CONS" },
                 rows: [
-                    { id: "con1", label: "Минус 1", type: "text", data: { fluxx: "Мало попыток в дешевом тарифе.", teal: "Постоянный спам на почту.", hello: "Слишком сложно новичкам.", revarta: "Слабая тех-оценка.", pmex: "Интерфейс устарел.", sandbox: "Таймер иногда бесит.", aceround: "Задержки в подсказках.", nobs: "Шаблоны слишком базовые." } },
-                    { id: "con2", label: "Минус 2", type: "text", data: { fluxx: "Нет встроенной доски.", teal: "ИИ фидбек поверхностный.", hello: "Цена кусается.", revarta: "Не подходит для хардов.", pmex: "Плохой поиск по базе.", sandbox: "Баги с распознаванием голоса.", aceround: "Не понимает контекст стартапа.", nobs: "Иногда генерит неестественно." } },
-                    { id: "con3", label: "Минус 3", type: "text", data: { fluxx: "Дороговато.", teal: "Долго настраивать.", hello: "Только под FAANG.", revarta: "ИИ переписывает смысл.", pmex: "Вопросы устарели.", sandbox: "Нет фокуса на резюме.", aceround: "Только инглиш.", nobs: "Нет реальных тренировок." } }
+                    { id: "con1", label: { ru: "Негатив 1", en: "Con 1" }, type: "text", data: { 
+                        fluxx: { ru: "Мало попыток в дешевом тарифе.", en: "" }, 
+                        teal: { ru: "Постоянный спам на почту.", en: "Spams your email box." }, 
+                        hello: { ru: "Слишком сложно новичкам.", en: "Too complex for juniors." }, 
+                        revarta: { ru: "Слабая тех-оценка.", en: "Weak technical evaluation." }, 
+                        pmex: { ru: "Интерфейс устарел.", en: "UI is very outdated." }, 
+                        sandbox: { ru: "Таймер иногда бесит.", en: "Timer can be annoying." }, 
+                        aceround: { ru: "Задержки в подсказках.", en: "Slight delay in hints." }, 
+                        nobs: { ru: "Шаблоны слишком базовые.", en: "Templates are too basic." } 
+                    } },
+                    { id: "con2", label: { ru: "Негатив 2", en: "Con 2" }, type: "text", data: { 
+                        fluxx: { ru: "Нет встроенной доски.", en: "" }, 
+                        teal: { ru: "ИИ фидбек поверхностный.", en: "AI feedback is a bit shallow." }, 
+                        hello: { ru: "Цена кусается.", en: "Very expensive." }, 
+                        revarta: { ru: "Не подходит для хардов.", en: "Not suitable for hard skills." }, 
+                        pmex: { ru: "Плохой поиск по базе.", en: "Bad search engine for questions." }, 
+                        sandbox: { ru: "Баги с распознаванием голоса.", en: "Voice rec bugs sometimes." }, 
+                        aceround: { ru: "Не понимает контекст стартапа.", en: "Struggles with startup context." }, 
+                        nobs: { ru: "Иногда генерит неестественно.", en: "Sometimes sounds robotic." } 
+                    } },
+                    { id: "con3", label: { ru: "Негатив 3", en: "Con 3" }, type: "text", data: { 
+                        fluxx: { ru: "Дороговато.", en: "" }, 
+                        teal: { ru: "Долго настраивать.", en: "Takes long to set up." }, 
+                        hello: { ru: "Только под FAANG.", en: "Geared only towards FAANG." }, 
+                        revarta: { ru: "ИИ переписывает смысл.", en: "AI sometimes alters meaning." }, 
+                        pmex: { ru: "Вопросы устарели.", en: "Some questions are dated." }, 
+                        sandbox: { ru: "Нет фокуса на резюме.", en: "No resume help." }, 
+                        aceround: { ru: "Только инглиш.", en: "English only." }, 
+                        nobs: { ru: "Нет реальных тренировок.", en: "No real interview simulation." } 
+                    } }
                 ]
             }
         ];
 
-        // Рендер таблицы
+        // --- ЛОГИКА ИНТЕРФЕЙСА ---
+
+        function updateStaticTexts() {
+            Object.keys(uiTexts[currentLang]).forEach(id => {
+                const el = document.getElementById(`t-${id}`);
+                if (el) el.innerHTML = uiTexts[currentLang][id];
+            });
+
+            // Кнопки переключения
+            const btnRu = document.getElementById('btn-ru');
+            const btnEn = document.getElementById('btn-en');
+            if (currentLang === 'ru') {
+                btnRu.className = "px-4 py-2 font-bold rounded-lg transition-all bg-black text-white";
+                btnEn.className = "px-4 py-2 font-bold rounded-lg transition-all text-gray-500 hover:text-black";
+                document.getElementById('opt-ru').style.display = 'block'; // Показываем RU BigTech в мастере
+            } else {
+                btnEn.className = "px-4 py-2 font-bold rounded-lg transition-all bg-black text-white";
+                btnRu.className = "px-4 py-2 font-bold rounded-lg transition-all text-gray-500 hover:text-black";
+                document.getElementById('opt-ru').style.display = 'none'; // Прячем RU BigTech
+                document.getElementById('c3').checked = false; 
+            }
+        }
+
+        function setLang(lang) {
+            currentLang = lang;
+            updateStaticTexts();
+            renderTable();
+            renderCards();
+            resetWizard();
+        }
+
+        function getActiveTools() {
+            // Если EN, отфильтровываем российский сервис
+            return currentLang === 'ru' ? allTools : allTools.filter(t => t.id !== 'fluxx');
+        }
+
         function renderTable() {
+            const tools = getActiveTools();
             const head = document.getElementById('table-head');
-            let headHtml = '<tr><th class="w-64 text-left border-r-2 border-black">Сервисы</th>';
-            tools.forEach(t => { headHtml += `<th class="w-40 text-center border-b-2 border-black">${t.name}</th>`; });
+            
+            // Sticky Header Cell
+            let headHtml = `<tr><th class="w-64 text-left font-black tracking-widest text-lg uppercase">${currentLang === 'ru' ? 'Сервисы' : 'Platforms'}</th>`;
+            tools.forEach(t => { headHtml += `<th class="w-48 text-center">${t.name}</th>`; });
             headHtml += '</tr>';
             head.innerHTML = headHtml;
 
@@ -457,22 +673,23 @@
             let bodyHtml = '';
 
             tableData.forEach(group => {
-                bodyHtml += `<tr class="category-row"><td colspan="${tools.length + 1}">${group.category}</td></tr>`;
+                // STICKY FIX: Текст обернут в sticky-div внутри ячейки
+                bodyHtml += `<tr class="category-row"><td colspan="${tools.length + 1}"><div class="category-sticky-text">${group.category[currentLang]}</div></td></tr>`;
                 
                 group.rows.forEach(row => {
                     bodyHtml += `<tr class="hover:bg-gray-50 transition-colors">
-                        <td class="font-medium text-sm border-r-2 border-black bg-white">${row.label}</td>`;
+                        <td class="font-bold text-sm bg-white">${row.label[currentLang]}</td>`;
                     
                     tools.forEach(t => {
                         let content = '';
                         if (row.type === 'bool') {
                             const val = row.data[t.id];
-                            if (val === true) content = '<span class="text-black font-black text-lg">✓</span>';
-                            else if (val === false) content = '<span class="text-gray-300 font-bold">−</span>';
+                            if (val === true) content = '<span class="text-green-600 font-black text-xl">✓</span>';
+                            else if (val === false) content = '<span class="text-gray-300 font-bold">✕</span>';
                         } else {
-                            content = `<span class="text-sm">${row.data[t.id] || ''}</span>`;
+                            content = `<span class="text-sm font-medium">${row.data[t.id][currentLang] || ''}</span>`;
                         }
-                        bodyHtml += `<td class="text-center bg-white border-b border-gray-100">${content}</td>`;
+                        bodyHtml += `<td class="text-center bg-white border-l border-gray-100">${content}</td>`;
                     });
                     bodyHtml += '</tr>';
                 });
@@ -480,7 +697,22 @@
             body.innerHTML = bodyHtml;
         }
 
-        // Ограничение чекбоксов
+        function renderCards() {
+            const tools = getActiveTools();
+            const container = document.getElementById('cards-container');
+            let html = '';
+            tools.forEach(t => {
+                html += `
+                    <a href="${t.url}" target="_blank" class="block border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all bg-white cursor-pointer group">
+                        <h3 class="font-black text-xl mb-2 group-hover:underline decoration-2 underline-offset-2">${t.name} &nearr;</h3>
+                        <p class="text-sm text-gray-700 leading-relaxed font-medium">${t.desc[currentLang]}</p>
+                    </a>
+                `;
+            });
+            container.innerHTML = html;
+        }
+
+        // --- ЛОГИКА МАСТЕРА (WIZARD) ---
         function enforceLimit(className, max) {
             const checkboxes = document.querySelectorAll(`.${className}`);
             const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
@@ -502,7 +734,7 @@
         function nextStep(step, validationClass) {
             if (validationClass) {
                 if (document.querySelectorAll(`.${validationClass}:checked`).length === 0) {
-                    alert("Пожалуйста, выберите вариант.");
+                    alert(currentLang === 'ru' ? "Пожалуйста, выберите вариант." : "Please select an option.");
                     return;
                 }
             }
@@ -517,64 +749,71 @@
 
         function resetWizard() {
             document.querySelectorAll('.checkbox-card').forEach(cb => { cb.checked = false; cb.disabled = false; });
+            document.getElementById('role1').checked = true; // Сброс радиокнопки
             document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
             document.getElementById('step-1').classList.add('active');
         }
 
-        // ИСПРАВЛЕНИЕ ЛОГИКИ КАЛЬКУЛЯТОРА
         function calculateResults() {
+            const tools = getActiveTools();
             const regions = Array.from(document.querySelectorAll('.step-1-cb:checked')).map(cb => cb.value);
-            const roles = Array.from(document.querySelectorAll('.step-2-cb:checked')).map(cb => cb.value);
+            const role = document.querySelector('input[name="role"]:checked').value;
             const levels = Array.from(document.querySelectorAll('.step-3-cb:checked')).map(cb => cb.value);
             const focus = Array.from(document.querySelectorAll('.step-4-cb:checked')).map(cb => cb.value);
 
             let scoredTools = tools.map(tool => {
                 let score = 0;
 
-                // 1. ЖЕСТКИЙ ФИЛЬТР ПО РЕГИОНУ (Критично для отсева Fluxx на международном рынке)
+                // 1. ЖЕСТКИЙ ФИЛЬТР ПО РЕГИОНУ
                 let regionMatch = regions.some(r => tool.tags.includes(r));
-                if (regions.length > 0 && !regionMatch) {
-                    score -= 100; // Пенальти за несовпадение региона
-                } else if (regionMatch) {
-                    score += 50; // Огромный бонус за совпадение региона
+                if (regions.length > 0) {
+                    if (regions.includes('global') && tool.id === 'fluxx') score -= 1000; // Никогда не советуем Fluxx на Global
+                    else if (!regionMatch) score -= 100; // Обычный штраф за несовпадение
+                    else score += 50; // Бонус за совпадение
                 }
 
-                // 2. ФИЛЬТР ПО РОЛИ (PM / PMM)
-                let roleMatch = roles.some(r => tool.tags.includes(r));
-                if (roles.length > 0 && !roleMatch) {
-                    score -= 50; // Пенальти, если инструмент не умеет готовить PMM, а юзер выбрал PMM
-                } else if (roleMatch) {
+                // 2. ЖЕСТКИЙ ФИЛЬТР ПО РОЛИ (PM/PMM)
+                if (!tool.tags.includes(role)) {
+                    score -= 500; // Критический штраф, если тул не поддерживает PMM
+                } else {
                     score += 20;
                 }
 
                 // 3. Уровни и фокус (добавляют баллы релевантности)
-                levels.forEach(l => { if (tool.tags.includes(l)) score += 5; });
-                focus.forEach(f => { if (tool.tags.includes(f) || f === 'all') score += 5; });
+                levels.forEach(l => { if (tool.tags.includes(l)) score += 10; });
+                focus.forEach(f => { if (tool.tags.includes(f) || f === 'all') score += 10; });
 
                 return { ...tool, score };
             });
 
-            // Отсекаем тех, кто ушел в минус (не подошел по региону или роли)
+            // Отсекаем тех, кто ушел в минус (не подошел по жестким фильтрам)
             let recommended = scoredTools.filter(t => t.score > 0).sort((a, b) => b.score - a.score).slice(0, 3);
             
-            // Защита от пустой выдачи
-            if (recommended.length === 0) recommended = [tools[0], tools[1]];
+            // Если ничего не подошло, даем универсальные
+            if (recommended.length === 0) {
+                recommended = tools.filter(t => t.id === 'teal' || t.id === 'revarta');
+            }
 
             const container = document.getElementById('results-container');
             let resHtml = '';
             recommended.forEach(t => {
                 resHtml += `
-                    <div class="border-2 border-black rounded-xl p-5 bg-white shadow-[4px_4px_0_0_#000]">
-                        <div class="font-black text-xl mb-1">${t.name}</div>
-                        <div class="text-gray-700">${t.desc}</div>
-                    </div>
+                    <a href="${t.url}" target="_blank" class="block border-2 border-black rounded-xl p-5 bg-white shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all cursor-pointer">
+                        <div class="font-black text-xl mb-1">${t.name} &nearr;</div>
+                        <div class="text-gray-700 font-medium">${t.desc[currentLang]}</div>
+                    </a>
                 `;
             });
             container.innerHTML = resHtml;
-            nextStep(5, 'step-4-cb');
+            nextStep(5);
         }
 
-        window.onload = renderTable;
+        // Инициализация при загрузке
+        window.onload = () => {
+            updateStaticTexts();
+            renderTable();
+            renderCards();
+        };
     </script>
 </body>
 </html>
