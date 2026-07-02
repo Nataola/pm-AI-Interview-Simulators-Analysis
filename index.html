@@ -107,14 +107,18 @@
         </header>
 
         <!-- БЛОК "О СОЗДАТЕЛЕ" (Лид-магнит) -->
-        <div class="bg-white border-2 border-black rounded-2xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-[6px_6px_0_0_#000] mb-12">
-            <div class="flex-grow text-center md:text-left">
-                <h2 class="text-2xl font-black mb-2" id="t-intro-title">Привет, я Наталия!</h2>
-                <p class="text-gray-700 text-lg mb-4" id="t-intro-text">
-                    Я собрала этот материал для подготовки к собеседованиям. Прямо сейчас я рассматриваю новые карьерные возможности. Если у вас есть вакансия, идея или проект — давайте пообщаемся!
-                </p>
-                <div class="flex flex-wrap justify-center md:justify-start gap-4">
-                    <!-- ИСПРАВЛЕННЫЕ ИКОНКИ (жесткий размер w-6 h-6 и flex-shrink-0) -->
+        <div class="bg-white border-2 border-black rounded-2xl p-6 md:p-8 flex flex-col lg:flex-row items-center gap-6 shadow-[6px_6px_0_0_#000] mb-12">
+            <div class="flex-grow text-center lg:text-left">
+                <h2 class="text-2xl font-black mb-4" id="t-intro-title">Привет, я Наталия, менеджер продукта с фокусом на GTM!</h2>
+                
+                <div class="text-gray-700 text-lg mb-6 space-y-2">
+                    <p id="t-intro-text-1" class="font-bold">Хотите ворваться в мир валютных удаленок? Мир горящих дедлайнов и больших зарплат?</p>
+                    <p id="t-intro-text-2">Подготовьтесь к продуктовому собеседованию и получите оффер в зарубежной компании. Я собрала лучшие инструменты и узнала, какие секции они закрывают.</p>
+                    <p id="t-intro-text-3" class="mt-4 italic">Если у вас есть вакансия, идея или проект — давайте пообщаемся!</p>
+                </div>
+
+                <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+                    <!-- Жесткий фикс размера иконок -->
                     <a href="https://www.linkedin.com/in/nataola/" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-black font-bold border-2 border-black rounded-xl shadow-[4px_4px_0_0_#000] hover:-translate-y-0.5 hover:shadow-[6px_6px_0_0_#000] transition-all">
                         <svg class="w-6 h-6 flex-shrink-0 text-[#0A66C2]" width="24" height="24" fill="currentColor" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
                         LinkedIn
@@ -146,7 +150,7 @@
             <div id="step-1" class="wizard-step active">
                 <p class="font-bold mb-4 text-lg" id="t-q1">Выберите целевые компании (не более 2):</p>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="company-options">
-                    <!-- Заполняется JS -->
+                    <!-- Заполняется JS (убраны РФ компании) -->
                 </div>
                 <button onclick="nextStep(2)" id="btn-next-1" class="mt-8 px-6 py-3 bg-black text-white font-bold rounded-xl border-2 border-black shadow-[4px_4px_0_0_#000] hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all w-full md:w-auto">Далее</button>
             </div>
@@ -241,7 +245,6 @@
                 </div>
             </div>
             
-            <!-- ДОБАВЛЕН ЗАГОЛОВОК ДЛЯ МАТЕРИАЛОВ -->
             <div class="mt-16 text-center">
                 <h3 class="text-2xl font-black mb-8" id="t-materials-title">Бесплатные материалы для подготовки</h3>
             </div>
@@ -269,12 +272,8 @@
     <script>
         let currentLang = 'ru';
         
-        // 1. БАЗА ДАННЫХ ИНСТРУМЕНТОВ
+        // 1. БАЗА ДАННЫХ ИНСТРУМЕНТОВ (Fluxx удален)
         const toolsDB = {
-            fluxx: { 
-                id: "fluxx", name: "Fluxx.ru", url: "https://fluxx.ru", tags: ["ru", "pm", "pmm", "metrics", "design"],
-                desc: { ru: "Идеален для глубокого погружения в специфику российского рынка и продуктовой аналитики.", en: "Ideal for deep dive into Russian market specifics and analytics." }
-            },
             teal: { 
                 id: "teal", name: "Teal", url: "https://tealhq.com", tags: ["global", "startup", "scaleup", "pm", "pmm", "resume"],
                 desc: { ru: "Лучший бесплатный трекер процесса поиска работы и генератор резюме с ИИ.", en: "Best free job search tracker and AI resume generator." }
@@ -310,8 +309,10 @@
             ru: {
                 "main-title": "Подготовься к продуктовому интервью!",
                 "main-subtitle": "Независимый анализ тренажеров необходимых для получения PM/PMM оффера",
-                "intro-title": "Привет, я Наталия!",
-                "intro-text": "Я собрала этот материал для подготовки к собеседованиям. Прямо сейчас я рассматриваю новые карьерные возможности. Если у вас есть вакансия, идея или проект — давайте пообщаемся!",
+                "intro-title": "Привет, я Наталия, менеджер продукта с фокусом на GTM.",
+                "intro-text-1": "Хотите ворваться в мир валютных удаленок? Мир горящих дедлайнов и больших зарплат?",
+                "intro-text-2": "Подготовьтесь к продуктовому собеседованию и получите оффер в зарубежной компании. Я собрала лучшие инструменты и узнала, какие секции они закрывают.",
+                "intro-text-3": "Если у вас есть вакансия, идея или проект — давайте пообщаемся!",
                 "wizard-title": "Индивидуальный подбор тренажера",
                 "w-s1": "Компания", "w-s2": "Роль", "w-s3": "Фокус", "w-s4": "Подбор",
                 "q1": "Выберите целевые компании (не более 2):",
@@ -339,8 +340,10 @@
             en: {
                 "main-title": "Prepare for your Product Interview!",
                 "main-subtitle": "Independent analysis of simulators needed for a PM/PMM offer",
-                "intro-title": "Hi, I'm Natalia!",
-                "intro-text": "I compiled this material for interview prep. Right now, I'm exploring new career opportunities. If you have a role, idea, or project — let's connect!",
+                "intro-title": "Hi, I'm Natalia, a Product Manager with a GTM focus.",
+                "intro-text-1": "Want to break into the world of remote global roles? The world of tight deadlines and big salaries?",
+                "intro-text-2": "Prepare for your product interview and land an offer at a global company. I've compiled the best tools and analyzed which sections they cover.",
+                "intro-text-3": "If you have an open role, idea, or project — let's connect!",
                 "wizard-title": "Personalized Simulator Match",
                 "w-s1": "Company", "w-s2": "Role", "w-s3": "Focus", "w-s4": "Result",
                 "q1": "Select target companies (max 2):",
@@ -367,12 +370,12 @@
             }
         };
 
+        // Удалены Российские компании из массива
         const wizardData = {
             companies: [
-                { id: "ru", tags: ["ru"], title: { ru: "Российские гиганты: Яндекс, Ozon, Т-Банк", en: "Local Giants: Yandex, Ozon, T-Bank" }, desc: { ru: "Фокус на продуктовую аналитику и локальные продуктовые кейсы", en: "Focus on product analytics and local product cases" } },
-                { id: "faang", tags: ["faang"], title: { ru: "Глобальный Big Tech (FAANG+)", en: "Global Big Tech (FAANG+)" }, desc: { ru: "Жесткие фреймворки, System Design и поведенческие интервью (STAR), культурный фит", en: "Strict frameworks, System Design, behavioral interviews (STAR), cultural fit" } },
-                { id: "scaleup", tags: ["scaleup", "global"], title: { ru: "Международные Scaleups (Revolut, Miro, Canva)", en: "Global Scaleups (Revolut, Miro, Canva)" }, desc: { ru: "Сильный фокус на стратегию, Growth, юнит-экономику.", en: "Strong focus on strategy, Growth, unit economics." } },
-                { id: "startup", tags: ["startup"], title: { ru: "Стартапы (Pre-seed to Series B)", en: "Startups (Pre-seed to Series B)" }, desc: { ru: "GTM фокус, запуск с нуля. Оценка продуктовой интуиции, гибкости и готовности работать руками.", en: "GTM focus, zero-to-one. Evaluating product intuition, flexibility, and hands-on readiness." } }
+                { id: "faang", tags: ["faang"], title: { ru: "Глобальный Big Tech (FAANG+)", en: "Global Big Tech (FAANG+)" }, desc: { ru: "Жесткие фреймворки, System Design и поведенческие интервью", en: "Strict frameworks, System Design, behavioral interviews" } },
+                { id: "scaleup", tags: ["scaleup", "global"], title: { ru: "Международные Scaleups (Revolut, Miro)", en: "Global Scaleups (Revolut, Miro, Canva)" }, desc: { ru: "Сильный фокус на стратегию, Growth, юнит-экономику.", en: "Strong focus on strategy, Growth, unit economics." } },
+                { id: "startup", tags: ["startup"], title: { ru: "Стартапы (Pre-seed to Series B)", en: "Startups (Pre-seed to Series B)" }, desc: { ru: "GTM фокус, запуск с нуля. Оценка продуктовой интуиции и гибкости.", en: "GTM focus, zero-to-one. Evaluating product intuition and flexibility." } }
             ]
         };
 
@@ -380,77 +383,75 @@
             {
                 category: { ru: "БАЗОВАЯ ИНФОРМАЦИЯ", en: "BASIC INFO" },
                 rows: [
-                    { id: "sum", label: { ru: "Саммари", en: "Summary" }, type: "text", data: { fluxx: {ru: "Идеален для РФ рынка", en: ""}, teal: {ru: "Трекер поиска и CRM", en: "Job tracker & CRM"}, hello: {ru: "Лучший для системного дизайна", en: "Best for System Design"}, revarta: {ru: "Мастер STAR и софтов", en: "STAR and soft skills master"}, pmex: {ru: "Огромная база вопросов", en: "Huge question bank"}, sandbox: {ru: "Стресс-тестирование метрик", en: "Metrics stress-testing"}, aceround: {ru: "Живые ИИ-аватары", en: "Live AI avatars"}, nobs: {ru: "Быстрая правка резюме", en: "Fast resume fixing"} } },
-                    { id: "r_pm", label: { ru: "Product Manager (PM)", en: "Product Manager (PM)" }, type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
-                    { id: "r_pmm", label: { ru: "Product Marketing (PMM)", en: "Product Marketing (PMM)" }, type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: true } }
+                    { id: "sum", label: { ru: "Саммари", en: "Summary" }, type: "text", data: { teal: {ru: "Трекер поиска и CRM", en: "Job tracker & CRM"}, hello: {ru: "Лучший для системного дизайна", en: "Best for System Design"}, revarta: {ru: "Мастер STAR и софтов", en: "STAR and soft skills master"}, pmex: {ru: "Огромная база вопросов", en: "Huge question bank"}, sandbox: {ru: "Стресс-тестирование метрик", en: "Metrics stress-testing"}, aceround: {ru: "Живые ИИ-аватары", en: "Live AI avatars"}, nobs: {ru: "Быстрая правка резюме", en: "Fast resume fixing"} } },
+                    { id: "r_pm", label: { ru: "Product Manager (PM)", en: "Product Manager (PM)" }, type: "bool", data: { teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
+                    { id: "r_pmm", label: { ru: "Product Marketing (PMM)", en: "Product Marketing (PMM)" }, type: "bool", data: { teal: true, hello: false, revarta: true, pmex: false, sandbox: false, aceround: true, nobs: true } }
                 ]
             },
             {
                 category: { ru: "ЦЕНЫ (ИНДИВИДУАЛЬНЫЙ ДОСТУП)", en: "PRICING (INDIVIDUAL)" },
                 rows: [
-                    { id: "p1", label: { ru: "1 месяц", en: "1 month" }, type: "text", data: { fluxx: { ru:"~990 ₽", en:""}, teal: {ru:"Free / $39",en:"Free / $39"}, hello: {ru:"$49",en:"$49"}, revarta: {ru:"$40",en:"$40"}, pmex: {ru:"$20",en:"$20"}, sandbox: {ru:"$29",en:"$29"}, aceround: {ru:"$40",en:"$40"}, nobs: {ru:"$15",en:"$15"} } },
-                    { id: "p3", label: { ru: "3 месяца", en: "3 months" }, type: "text", data: { fluxx: { ru:"~2990 ₽", en:""}, teal: {ru:"$90",en:"$90"}, hello: {ru:"$129",en:"$129"}, revarta: {ru:"$100",en:"$100"}, pmex: {ru:"$50",en:"$50"}, sandbox: {ru:"$75",en:"$75"}, aceround: {ru:"$100",en:"$100"}, nobs: {ru:"$40",en:"$40"} } },
-                    { id: "p6", label: { ru: "6 месяцев", en: "6 months" }, type: "text", data: { fluxx: { ru:"~4990 ₽", en:""}, teal: {ru:"$150",en:"$150"}, hello: {ru:"$199",en:"$199"}, revarta: {ru:"$180",en:"$180"}, pmex: {ru:"$90",en:"$90"}, sandbox: {ru:"$130",en:"$130"}, aceround: {ru:"$180",en:"$180"}, nobs: {ru:"$70",en:"$70"} } }
-                    // Строка стоимости за год удалена по запросу пользователя
+                    { id: "p1", label: { ru: "1 месяц", en: "1 month" }, type: "text", data: { teal: {ru:"Free / $39",en:"Free / $39"}, hello: {ru:"$49",en:"$49"}, revarta: {ru:"$40",en:"$40"}, pmex: {ru:"$20",en:"$20"}, sandbox: {ru:"$29",en:"$29"}, aceround: {ru:"$40",en:"$40"}, nobs: {ru:"$15",en:"$15"} } },
+                    { id: "p3", label: { ru: "3 месяца", en: "3 months" }, type: "text", data: { teal: {ru:"$90",en:"$90"}, hello: {ru:"$129",en:"$129"}, revarta: {ru:"$100",en:"$100"}, pmex: {ru:"$50",en:"$50"}, sandbox: {ru:"$75",en:"$75"}, aceround: {ru:"$100",en:"$100"}, nobs: {ru:"$40",en:"$40"} } },
+                    { id: "p6", label: { ru: "6 месяцев", en: "6 months" }, type: "text", data: { teal: {ru:"$150",en:"$150"}, hello: {ru:"$199",en:"$199"}, revarta: {ru:"$180",en:"$180"}, pmex: {ru:"$90",en:"$90"}, sandbox: {ru:"$130",en:"$130"}, aceround: {ru:"$180",en:"$180"}, nobs: {ru:"$70",en:"$70"} } }
                 ]
             },
             {
                 category: { ru: "УРОВНИ (GRADE)", en: "GRADE LEVELS" },
                 rows: [
-                    { id: "lvl_1", label: { ru: "Intern / APM / Junior", en: "Intern / APM / Junior" }, type: "bool", data: { fluxx: true, teal: true, hello: false, revarta: true, pmex: true, sandbox: false, aceround: true, nobs: true } },
-                    { id: "lvl_2", label: { ru: "Middle / PM", en: "Middle / PM" }, type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
-                    { id: "lvl_3", label: { ru: "Senior / SPM", en: "Senior / SPM" }, type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
-                    { id: "lvl_4", label: { ru: "Lead / Group PM", en: "Lead / Group PM" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } },
-                    { id: "lvl_5", label: { ru: "Director / CPO", en: "Director / CPO" }, type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } }
+                    { id: "lvl_1", label: { ru: "Intern / APM / Junior", en: "Intern / APM / Junior" }, type: "bool", data: { teal: true, hello: false, revarta: true, pmex: true, sandbox: false, aceround: true, nobs: true } },
+                    { id: "lvl_2", label: { ru: "Middle / PM", en: "Middle / PM" }, type: "bool", data: { teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
+                    { id: "lvl_3", label: { ru: "Senior / SPM", en: "Senior / SPM" }, type: "bool", data: { teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: true } },
+                    { id: "lvl_4", label: { ru: "Lead / Group PM", en: "Lead / Group PM" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } },
+                    { id: "lvl_5", label: { ru: "Director / CPO", en: "Director / CPO" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } }
                 ]
             },
             {
                 category: { ru: "СЕКЦИИ (SECTIONS)", en: "SECTIONS" },
                 rows: [
-                    { id: "sec_1", label: { ru: "Product Sense / Design", en: "Product Sense / Design" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "sec_2", label: { ru: "Execution / Metrics", en: "Execution / Metrics" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "sec_3", label: { ru: "System Design", en: "System Design" }, type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
-                    { id: "sec_4", label: { ru: "Behavioral (STAR)", en: "Behavioral (STAR)" }, type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: true, pmex: true, sandbox: false, aceround: true, nobs: false } },
-                    { id: "sec_5", label: { ru: "Strategy", en: "Strategy" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "sec_6", label: { ru: "Estimation / Fermi", en: "Estimation / Fermi" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
-                    { id: "sec_7", label: { ru: "Growth / Monetization", en: "Growth / Monetization" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "sec_8", label: { ru: "A/B Testing", en: "A/B Testing" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
-                    { id: "sec_9", label: { ru: "Go-To-Market (GTM)", en: "Go-To-Market (GTM)" }, type: "bool", data: { fluxx: true, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "sec_10", label: { ru: "Prioritization", en: "Prioritization" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "sec_11", label: { ru: "Root Cause Analysis", en: "Root Cause Analysis" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
-                    { id: "sec_12", label: { ru: "Trade-offs", en: "Trade-offs" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
-                    { id: "sec_13", label: { ru: "Roadmapping", en: "Roadmapping" }, type: "bool", data: { fluxx: true, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "sec_14", label: { ru: "Pricing", en: "Pricing" }, type: "bool", data: { fluxx: true, teal: false, hello: false, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } },
-                    { id: "sec_15", label: { ru: "Competitor Analysis", en: "Competitor Analysis" }, type: "bool", data: { fluxx: true, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "sec_16", label: { ru: "Take-home Assignments", en: "Take-home Assignments" }, type: "bool", data: { fluxx: true, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
-                    { id: "sec_17", label: { ru: "Resume / ATS Matcher", en: "Resume / ATS Matcher" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: true } }
+                    { id: "sec_1", label: { ru: "Product Sense / Design", en: "Product Sense / Design" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "sec_2", label: { ru: "Execution / Metrics", en: "Execution / Metrics" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "sec_3", label: { ru: "System Design", en: "System Design" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
+                    { id: "sec_4", label: { ru: "Behavioral (STAR)", en: "Behavioral (STAR)" }, type: "bool", data: { teal: false, hello: true, revarta: true, pmex: true, sandbox: false, aceround: true, nobs: false } },
+                    { id: "sec_5", label: { ru: "Strategy", en: "Strategy" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "sec_6", label: { ru: "Estimation / Fermi", en: "Estimation / Fermi" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
+                    { id: "sec_7", label: { ru: "Growth / Monetization", en: "Growth / Monetization" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "sec_8", label: { ru: "A/B Testing", en: "A/B Testing" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
+                    { id: "sec_9", label: { ru: "Go-To-Market (GTM)", en: "Go-To-Market (GTM)" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "sec_10", label: { ru: "Prioritization", en: "Prioritization" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "sec_11", label: { ru: "Root Cause Analysis", en: "Root Cause Analysis" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
+                    { id: "sec_12", label: { ru: "Trade-offs", en: "Trade-offs" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: true, aceround: false, nobs: false } },
+                    { id: "sec_13", label: { ru: "Roadmapping", en: "Roadmapping" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "sec_14", label: { ru: "Pricing", en: "Pricing" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: true, aceround: false, nobs: false } },
+                    { id: "sec_15", label: { ru: "Competitor Analysis", en: "Competitor Analysis" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "sec_16", label: { ru: "Take-home Assignments", en: "Take-home Assignments" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
+                    { id: "sec_17", label: { ru: "Resume / ATS Matcher", en: "Resume / ATS Matcher" }, type: "bool", data: { teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: true } }
                 ]
             },
             {
                 category: { ru: "ФУНКЦИОНАЛЬНЫЕ ВОЗМОЖНОСТИ (ФИЧИ)", en: "FEATURES" },
                 rows: [
-                    { id: "f_av", label: { ru: "AI-аватары / Видео-интервью", en: "AI Avatars / Video" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "f_ch", label: { ru: "AI Coach (Текстовый чат)", en: "AI Coach (Chat)" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "f_cv", label: { ru: "Resume Matcher / ATS", en: "Resume Matcher / ATS" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: true } },
-                    { id: "f_db", label: { ru: "База реальных вопросов", en: "Real Questions DB" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "f_mock", label: { ru: "Mock Interviews (P2P)", en: "Mock Interviews (P2P)" }, type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
-                    { id: "f_exp", label: { ru: "Expert Feedback (Платный)", en: "Expert Feedback (Paid)" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
-                    { id: "f_frame", label: { ru: "Встроенные фреймворки (CIRCLES и др.)", en: "Built-in Frameworks" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: false, sandbox: true, aceround: true, nobs: false } },
-                    { id: "f_rub", label: { ru: "Оценка по рубрикатору (Scoring)", en: "Rubric Scoring" }, type: "bool", data: { fluxx: true, teal: false, hello: true, revarta: true, pmex: false, sandbox: true, aceround: true, nobs: false } },
-                    { id: "f_voice", label: { ru: "Голосовой ввод (Voice-to-Text)", en: "Voice Input" }, type: "bool", data: { fluxx: false, teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "f_vid", label: { ru: "Запись видео-ответа", en: "Video Recording" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
-                    { id: "f_track", label: { ru: "Трекинг прогресса / Аналитика", en: "Progress Tracking" }, type: "bool", data: { fluxx: true, teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
-                    { id: "f_com", label: { ru: "Комьюнити / Форум", en: "Community / Forum" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
-                    { id: "f_ext", label: { ru: "Chrome Extension", en: "Chrome Extension" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: true } },
-                    { id: "f_api", label: { ru: "API / Интеграции", en: "API / Integrations" }, type: "bool", data: { fluxx: false, teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
-                    { id: "f_mob", label: { ru: "Мобильное приложение (Native)", en: "Mobile App (Native)" }, type: "bool", data: { fluxx: false, teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } }
+                    { id: "f_av", label: { ru: "AI-аватары / Видео-интервью", en: "AI Avatars / Video" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "f_ch", label: { ru: "AI Coach (Текстовый чат)", en: "AI Coach (Chat)" }, type: "bool", data: { teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "f_cv", label: { ru: "Resume Matcher / ATS", en: "Resume Matcher / ATS" }, type: "bool", data: { teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: true } },
+                    { id: "f_db", label: { ru: "База реальных вопросов", en: "Real Questions DB" }, type: "bool", data: { teal: false, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "f_mock", label: { ru: "Mock Interviews (P2P)", en: "Mock Interviews (P2P)" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
+                    { id: "f_exp", label: { ru: "Expert Feedback (Платный)", en: "Expert Feedback (Paid)" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
+                    { id: "f_frame", label: { ru: "Встроенные фреймворки (CIRCLES и др.)", en: "Built-in Frameworks" }, type: "bool", data: { teal: false, hello: true, revarta: true, pmex: false, sandbox: true, aceround: true, nobs: false } },
+                    { id: "f_rub", label: { ru: "Оценка по рубрикатору (Scoring)", en: "Rubric Scoring" }, type: "bool", data: { teal: false, hello: true, revarta: true, pmex: false, sandbox: true, aceround: true, nobs: false } },
+                    { id: "f_voice", label: { ru: "Голосовой ввод (Voice-to-Text)", en: "Voice Input" }, type: "bool", data: { teal: false, hello: true, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "f_vid", label: { ru: "Запись видео-ответа", en: "Video Recording" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: true, nobs: false } },
+                    { id: "f_track", label: { ru: "Трекинг прогресса / Аналитика", en: "Progress Tracking" }, type: "bool", data: { teal: true, hello: true, revarta: true, pmex: true, sandbox: true, aceround: true, nobs: false } },
+                    { id: "f_com", label: { ru: "Комьюнити / Форум", en: "Community / Forum" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: true, sandbox: false, aceround: false, nobs: false } },
+                    { id: "f_ext", label: { ru: "Chrome Extension", en: "Chrome Extension" }, type: "bool", data: { teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: true } },
+                    { id: "f_api", label: { ru: "API / Интеграции", en: "API / Integrations" }, type: "bool", data: { teal: true, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } },
+                    { id: "f_mob", label: { ru: "Мобильное приложение (Native)", en: "Mobile App (Native)" }, type: "bool", data: { teal: false, hello: false, revarta: false, pmex: false, sandbox: false, aceround: false, nobs: false } }
                 ]
             },
             {
                 category: { ru: "ОТЗЫВЫ ПОЛЬЗОВАТЕЛЕЙ", en: "USER REVIEWS" },
                 rows: [
-                    { id: "rev_p", label: { ru: "Плюсы (Позитив)", en: "Pros" }, type: "text", data: { 
-                        fluxx: {ru:"«Отлично понимает рынок РФ»<br>«Сильные кейсы по аналитике»<br>«Дешево за год»", en:""}, 
+                    { id: "rev_p", label: { ru: "Плюсы (Позитив)", en: "Pros" }, type: "text", data: {  
                         teal: {ru:"«Лучшая CRM для вакансий»<br>«Отличный генератор CV»<br>«Хороший фри-тир»", en:"«Best CRM for jobs»<br>«Great CV generator»<br>«Good free tier»"}, 
                         hello: {ru:"«Идеально для FAANG»<br>«Глубокий System Design»<br>«Понятные фреймворки»", en:"«Perfect for FAANG»<br>«Deep System Design»<br>«Clear frameworks»"}, 
                         revarta: {ru:"«Лучшая отработка STAR»<br>«Приятный интерфейс»<br>«Хороший фидбек ИИ»", en:"«Best STAR practice»<br>«Nice UI»<br>«Good AI feedback»"}, 
@@ -460,7 +461,6 @@
                         nobs: {ru:"«Пробивает ATS»<br>«Очень быстро»<br>«Дешево и сердито»", en:"«Beats ATS»<br>«Very fast»<br>«Cheap and simple»"} 
                     }},
                     { id: "rev_n", label: { ru: "Минусы (Негатив)", en: "Cons" }, type: "text", data: { 
-                        fluxx: {ru:"«Нет английского»<br>«Только текст»<br>«Мало PMM кейсов»", en:""}, 
                         teal: {ru:"«Не тренирует интервью»<br>«Платные шаблоны»<br>«Много кликов»", en:"«No interview prep»<br>«Paid templates»<br>«Too many clicks»"}, 
                         hello: {ru:"«Дорого»<br>«Нет фокуса на PMM»<br>«Сложно для новичков»", en:"«Expensive»<br>«No PMM focus»<br>«Hard for juniors»"}, 
                         revarta: {ru:"«Мало хард-скиллов»<br>«Долгая загрузка»<br>«Нет видео»", en:"«Few hard skills»<br>«Slow loading»<br>«No video»"}, 
@@ -475,11 +475,7 @@
 
         // --- ЛОГИКА ИНТЕРФЕЙСА ---
         function getActiveTools() {
-            let tools = Object.values(toolsDB);
-            if (currentLang === 'en') {
-                tools = tools.filter(t => t.id !== 'fluxx');
-            }
-            return tools;
+            return Object.values(toolsDB);
         }
 
         function setLang(lang) {
@@ -502,7 +498,7 @@
             renderWizardCompanies();
             renderTable();
             renderCards();
-            resetWizard(); // Сброс состояния калькулятора при смене языка
+            resetWizard(); 
         }
 
         // --- WIZARD (КАЛЬКУЛЯТОР) ---
@@ -512,7 +508,6 @@
             const container = document.getElementById('company-options');
             let html = '';
             let options = wizardData.companies;
-            if (currentLang === 'en') options = options.filter(o => o.id !== 'ru');
 
             options.forEach(o => {
                 html += `
@@ -571,11 +566,9 @@
             if (!focus) return alert(currentLang === 'ru' ? "Выберите фокус" : "Select a focus");
             wizardSelections.focus = focus.value;
 
-            // Логика подсчета баллов
             const tools = getActiveTools();
             let scores = tools.map(t => ({ id: t.id, score: 0 }));
 
-            // 1. Фильтр по роли (жесткий)
             if (wizardSelections.role === 'pmm') {
                 scores = scores.filter(s => {
                     const tool = tools.find(t => t.id === s.id);
@@ -583,26 +576,15 @@
                 });
             }
 
-            // 2. Баллы за компанию/географию
             scores.forEach(s => {
                 const tool = tools.find(t => t.id === s.id);
                 wizardSelections.companies.forEach(cId => {
-                    if (cId === 'ru') {
-                        if (tool.id === 'fluxx') s.score += 100; // Прямое попадание
-                    }
                     if (cId === 'faang' && tool.tags.includes('faang')) s.score += 30;
                     if (cId === 'scaleup' && tool.tags.includes('scaleup')) s.score += 20;
                     if (cId === 'startup' && tool.tags.includes('startup')) s.score += 20;
                 });
             });
 
-            // Жесткий штраф: Если НЕ выбрана РФ, пессимизируем Fluxx
-            if (!wizardSelections.companies.includes('ru')) {
-                const fluxxIndex = scores.findIndex(s => s.id === 'fluxx');
-                if (fluxxIndex !== -1) scores[fluxxIndex].score -= 500;
-            }
-
-            // 3. Баллы за фокус
             scores.forEach(s => {
                 const tool = tools.find(t => t.id === s.id);
                 if (wizardSelections.focus === 'design' && tool.tags.includes('design')) s.score += 40;
@@ -612,7 +594,6 @@
                 if (wizardSelections.focus === 'all') s.score += 10;
             });
 
-            // Сортировка и вывод топ-3
             scores.sort((a, b) => b.score - a.score);
             const topTools = scores.slice(0, 3).filter(s => s.score > 0);
 
@@ -646,7 +627,6 @@
             const thead = document.getElementById('table-head');
             const tbody = document.getElementById('table-body');
 
-            // Шапка
             let hHTML = `<tr><th class="w-64 text-left font-black tracking-widest">${currentLang === 'ru' ? 'СЕРВИСЫ' : 'SERVICES'}</th>`;
             tools.forEach(t => {
                 hHTML += `<th class="w-48 font-black text-lg">${t.name}</th>`;
@@ -654,10 +634,8 @@
             hHTML += `</tr>`;
             thead.innerHTML = hHTML;
 
-            // Тело
             let bHTML = '';
             tableData.forEach(block => {
-                // Строка-разделитель (темно-синяя/черная)
                 bHTML += `<tr class="section-header"><td colspan="${tools.length + 1}" class="py-3 font-bold text-white tracking-widest">${block.category[currentLang]}</td></tr>`;
                 
                 block.rows.forEach(row => {
@@ -679,7 +657,7 @@
             tbody.innerHTML = bHTML;
         }
 
-        // --- КАРТОЧКИ (Ссылки без кнопок с текстом) ---
+        // --- КАРТОЧКИ ---
         function renderCards() {
             const tools = getActiveTools();
             const container = document.getElementById('cards-container');
@@ -689,7 +667,7 @@
                     <a href="${t.url}" target="_blank" class="block border-2 border-black rounded-xl p-5 shadow-[4px_4px_0_0_#000] hover:-translate-y-1 hover:shadow-[6px_6px_0_0_#000] transition-all bg-white cursor-pointer group flex flex-col justify-between h-full">
                         <div>
                             <h3 class="font-black text-xl mb-2 group-hover:underline decoration-2 underline-offset-2">${t.name} &nearr;</h3>
-                            <p class="text-sm text-gray-700 leading-relaxed font-medium">${t.desc[currentLang]}</p>
+                            <p class="text-sm text-gray-700 leading-relaxed font-medium mb-4">${t.desc[currentLang]}</p>
                         </div>
                     </a>
                 `;
